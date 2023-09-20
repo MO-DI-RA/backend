@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 # 주석 달기 ~
+# 여기도 주석
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
