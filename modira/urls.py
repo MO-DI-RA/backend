@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 # 주석 달기 ~
 # 여기도 주석
+# tlqkf sk rhtnsep
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
