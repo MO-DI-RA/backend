@@ -9,3 +9,9 @@ class Users(models.Model):
     password = models.CharField(max_length=20, validators=[validate_password])
     created_at = models.DateTimeField(auto_now=True)
 
+class Comment(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    author_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+    content = models.TextField(max_length=150)
+    post_id = models.IntegerField(max_length=30)
+    created_at = models.DateTimeField(auto_now=True)
