@@ -1,0 +1,22 @@
+[Info  - 10:09:48 PM] (6697) Pylance language server 2023.5.30 (pyright e1b6074b) starting
+[Info  - 10:09:48 PM] (6697) Server root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 10:09:48 PM] (6697) Starting service instance "test1"
+[Info  - 10:09:48 PM] (6697) Setting pythonPath for service "test1": "/home/aa/.pyenv/versions/3.9.11/bin/python"
+[Warn  - 10:09:48 PM] (6697) stubPath /home/aa/test1/typings is not a valid directory.
+[Info  - 10:09:48 PM] (6697) Assuming Python version 3.9
+[Info  - 10:09:48 PM] (6697) Found 14 source files
+[Info  - 10:09:48 PM] (6697) Background analysis(1) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 10:09:48 PM] (6697) Background analysis(1) started
+[Info  - 10:09:48 PM] (6697) Indexer background runner(2) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist (index)
+[Info  - 10:09:48 PM] (6697) Indexing(2) started
+[Info  - 10:09:48 PM] (6697) scanned(2) 37 files over 1 exec env
+[Info  - 10:09:48 PM] (6697) indexed(2) 25 files over 1 exec env
+[Info  - 10:09:48 PM] (6697) Indexing finished(2).
+[Info  - 10:10:04 PM] (6697) Found 15 source files
+[Info  - 10:10:30 PM] (6697) Found 15 source files
+[Info  - 10:12:04 PM] (6697) Found 15 source files
+[Info  - 10:13:20 PM] (6697) Indexer background runner(3) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist (refresh)
+[Info  - 10:13:20 PM] (6697) Indexing(3) started
+[Info  - 10:13:20 PM] (6697) scanned(3) 37 files over 1 exec env
+[Info  - 10:13:21 PM] (6697) indexed(3) 25 files over 1 exec env
+[Info  - 10:13:21 PM] (6697) Indexing finished(3).

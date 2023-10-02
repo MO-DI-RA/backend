@@ -1,0 +1,26 @@
+[Info  - 10:24:28 PM] (12886) Pylance language server 2023.5.30 (pyright e1b6074b) starting
+[Info  - 10:24:28 PM] (12886) Server root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 10:24:28 PM] (12886) Starting service instance "aa"
+[Info  - 10:24:28 PM] (12886) Setting pythonPath for service "aa": "/home/aa/.pyenv/versions/3.9.11/bin/python"
+[Warn  - 10:24:28 PM] (12886) stubPath /home/aa/typings is not a valid directory.
+[Info  - 10:24:28 PM] (12886) Assuming Python version 3.9
+[Info  - 10:24:28 PM] (12886) Auto-excluding /home/aa/C:UsersUserDesktop
+[Info  - 10:24:28 PM] (12886) Auto-excluding /home/aa/C:UsersUserDesktop새
+[Info  - 10:24:28 PM] (12886) Auto-excluding /home/aa/폴더
+[Info  - 10:24:28 PM] (12886) Found 232 source files
+[Info  - 10:24:28 PM] (12886) Background analysis(1) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 10:24:28 PM] (12886) Background analysis(1) started
+[Info  - 10:26:43 PM] (12886) Found 225 source files
+[Info  - 10:26:51 PM] (12886) Indexer background runner(2) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist (index)
+[Info  - 10:26:51 PM] (12886) Indexing(2) started
+[Info  - 10:26:51 PM] (12886) Found 225 source files
+[Info  - 10:26:51 PM] (12886) scanned(2) 37 files over 1 exec env
+[Info  - 10:26:51 PM] (12886) indexed(2) 25 files over 1 exec env
+[Info  - 10:26:51 PM] (12886) Indexing finished(2).
+[Info  - 10:28:24 PM] (12886) Found 222 source files
+[Info  - 10:28:51 PM] (12886) Found 221 source files
+[Info  - 10:28:58 PM] (12886) Found 221 source files
+[Info  - 10:30:11 PM] (12886) Found 220 source files
+[Info  - 10:30:33 PM] (12886) Found 215 source files
+[Info  - 10:30:35 PM] (12886) Found 204 source files
+[Info  - 10:31:04 PM] (12886) Found 158 source files

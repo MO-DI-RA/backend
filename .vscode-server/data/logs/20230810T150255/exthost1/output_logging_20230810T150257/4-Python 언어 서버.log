@@ -1,0 +1,16 @@
+[Info  - 3:02:58 PM] (1628) Pylance language server 2023.5.30 (pyright e1b6074b) starting
+[Info  - 3:02:58 PM] (1628) Server root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 3:02:58 PM] (1628) Starting service instance "movie_api"
+[Info  - 3:02:58 PM] (1628) Setting pythonPath for service "movie_api": "/home/aa/.pyenv/versions/3.9.11/bin/python"
+[Warn  - 3:02:58 PM] (1628) stubPath /home/aa/movie/movie_api/movie_api/typings is not a valid directory.
+[Info  - 3:02:58 PM] (1628) Assuming Python version 3.9
+[Info  - 3:02:58 PM] (1628) Found 18 source files
+[Info  - 3:02:59 PM] (1628) Background analysis(1) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 3:02:59 PM] (1628) Background analysis(1) started
+[Info  - 3:02:59 PM] (1628) Indexer background runner(2) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist (index)
+[Info  - 3:02:59 PM] (1628) Indexing(2) started
+[Info  - 3:02:59 PM] (1628) scanned(2) 14 files over 1 exec env
+[Info  - 3:02:59 PM] (1628) indexed(2) 4 files over 1 exec env
+[Info  - 3:02:59 PM] (1628) Indexing finished(2).
+[Info  - 3:04:43 PM] (1628) Found 19 source files
+[Info  - 4:10:40 PM] (1628) Found 20 source files

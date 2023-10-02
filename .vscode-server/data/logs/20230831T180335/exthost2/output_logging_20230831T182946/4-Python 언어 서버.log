@@ -1,0 +1,14 @@
+[Info  - 6:29:48 PM] (4844) Pylance language server 2023.5.30 (pyright e1b6074b) starting
+[Info  - 6:29:48 PM] (4844) Server root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 6:29:48 PM] (4844) Starting service instance "costaurant"
+[Info  - 6:29:48 PM] (4844) Setting pythonPath for service "costaurant": "/home/aa/.pyenv/versions/3.9.11/bin/python"
+[Warn  - 6:29:48 PM] (4844) stubPath /home/aa/codeit-django/costaurant/typings is not a valid directory.
+[Info  - 6:29:48 PM] (4844) Assuming Python version 3.9
+[Info  - 6:29:48 PM] (4844) Found 22 source files
+[Info  - 6:29:48 PM] (4844) Background analysis(1) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 6:29:48 PM] (4844) Background analysis(1) started
+[Info  - 6:29:48 PM] (4844) Indexer background runner(2) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist (index)
+[Info  - 6:29:48 PM] (4844) Indexing(2) started
+[Info  - 6:29:48 PM] (4844) scanned(2) 37 files over 1 exec env
+[Info  - 6:29:49 PM] (4844) indexed(2) 25 files over 1 exec env
+[Info  - 6:29:49 PM] (4844) Indexing finished(2).

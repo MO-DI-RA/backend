@@ -1,0 +1,12 @@
+[Info  - 5:51:55 PM] (6520) Pylance language server 2023.5.30 (pyright e1b6074b) starting
+[Info  - 5:51:55 PM] (6520) Server root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 5:51:55 PM] (6520) Starting service instance "aa"
+[Info  - 5:51:55 PM] (6520) Setting pythonPath for service "aa": "/home/aa/.pyenv/versions/3.9.11/bin/python"
+[Warn  - 5:51:55 PM] (6520) stubPath /home/aa/typings is not a valid directory.
+[Info  - 5:51:55 PM] (6520) Assuming Python version 3.9
+[Info  - 5:51:55 PM] (6520) Auto-excluding /home/aa/C:UsersUserDesktop
+[Info  - 5:51:55 PM] (6520) Auto-excluding /home/aa/C:UsersUserDesktop새
+[Info  - 5:51:55 PM] (6520) Auto-excluding /home/aa/폴더
+[Info  - 5:51:55 PM] (6520) Found 183 source files
+[Info  - 5:51:55 PM] (6520) Background analysis(1) root directory: /home/aa/.vscode-server/extensions/ms-python.vscode-pylance-2023.5.30/dist
+[Info  - 5:51:55 PM] (6520) Background analysis(1) started

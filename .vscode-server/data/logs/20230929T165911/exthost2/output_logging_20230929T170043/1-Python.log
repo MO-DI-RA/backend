@@ -1,0 +1,13 @@
+실험 'python.createEnvironment.trigger'이(가) 활성 상태입니다.
+실험 'pythonaa'이(가) 활성 상태입니다.
+실험 'pythonPromptNewFormatterExt'이(가) 활성 상태입니다.
+실험 'pythonPromptNewToolsExt'이(가) 활성 상태입니다.
+실험 'pythonTestAdapter'이(가) 활성 상태입니다.
+LSP Notebooks experiment is enabled
+LSP Notebooks interactive window support is enabled
+> ./.pyenv/shims/python -I ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/get_output_via_markers.py ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/interpreterInfo.py
+> ./C:UsersUserDesktop/bin/python -I ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/get_output_via_markers.py ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/interpreterInfo.py
+> ./C:UsersUserDesktop새/bin/python -I ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/get_output_via_markers.py ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/interpreterInfo.py
+> ./폴더/bin/python -I ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/get_output_via_markers.py ./.vscode-server/extensions/ms-python.python-2023.4.1/pythonFiles/interpreterInfo.py
+Python 인터프리터 경로: ./C:UsersUserDesktop/bin/python
+Pylance 언어 서버를 시작하는 중입니다.

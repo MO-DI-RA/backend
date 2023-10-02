@@ -1,0 +1,12 @@
+Visual Studio Code (1.76.1, wsl, desktop)
+Jupyter Extension Version: 2023.2.1200692131.
+Python Extension Version: 2023.4.1.
+Workspace folder /home/aa/codeit-django/costaurant
+info 18:29:47.251: LSP Notebooks experiment is enabled
+warn 18:29:47.653: Failed to get activated env vars with python /home/aa/.pyenv/versions/3.8.13/bin/python in 119ms
+error 18:29:47.654: Unable to determine site packages path for python /home/aa/.pyenv/versions/3.8.13/bin/python (Pyenv)
+info 18:29:47.658: Process Execution: > ~/.pyenv/versions/3.8.13/bin/python -m pip list
+> ~/.pyenv/versions/3.8.13/bin/python -m pip list
+info 18:30:09.026: Shutting down notebooks for 79d39ee5-3f8b-4005-9ec7-bd8392683cbc
+info 18:30:09.026: Disposing HostJupyterExecution 7db9d6c0-9e6e-450f-8e31-712cc353d657
+info 18:30:09.026: Disposing HostJupyterExecution 7db9d6c0-9e6e-450f-8e31-712cc353d657

@@ -1,0 +1,12 @@
+Visual Studio Code (1.76.1, wsl, desktop)
+Jupyter Extension Version: 2023.2.1200692131.
+Python Extension Version: 2023.4.1.
+Workspace folder /home/aa/movie/movie_api/movie_api
+info 23:58:05.321: LSP Notebooks experiment is enabled
+warn 23:58:05.900: Failed to get activated env vars with python /home/aa/.pyenv/versions/3.9.11/bin/python in 151ms
+error 23:58:05.900: Unable to determine site packages path for python /home/aa/.pyenv/versions/3.9.11/bin/python (Pyenv)
+info 23:58:05.906: Process Execution: > ~/.pyenv/versions/3.9.11/bin/python -m pip list
+> ~/.pyenv/versions/3.9.11/bin/python -m pip list
+info 23:58:10.561: Shutting down notebooks for 08a4531b-cb4f-456f-ab39-0975aaa54fec
+info 23:58:10.561: Disposing HostJupyterExecution 86e50800-55eb-4146-85c2-ea747fc8f5d1
+info 23:58:10.561: Disposing HostJupyterExecution 86e50800-55eb-4146-85c2-ea747fc8f5d1
