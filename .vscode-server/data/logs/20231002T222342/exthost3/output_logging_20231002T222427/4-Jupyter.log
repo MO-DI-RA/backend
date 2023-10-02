@@ -1,9 +1,0 @@
-Visual Studio Code (1.76.1, wsl, desktop)
-Jupyter Extension Version: 2023.2.1200692131.
-Python Extension Version: 2023.4.1.
-Workspace folder /home/aa
-info 22:26:50.921: LSP Notebooks experiment is enabled
-warn 22:26:51.086: Failed to get activated env vars with python /home/aa/.pyenv/versions/3.9.11/bin/python in 124ms
-error 22:26:51.087: Unable to determine site packages path for python /home/aa/.pyenv/versions/3.9.11/bin/python (Pyenv)
-info 22:26:51.095: Process Execution: > ~/.pyenv/versions/3.9.11/bin/python -m pip list
-> ~/.pyenv/versions/3.9.11/bin/python -m pip list

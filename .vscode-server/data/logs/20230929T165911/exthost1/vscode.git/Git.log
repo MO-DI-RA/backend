@@ -1,7 +1,0 @@
-2023-09-29 16:59:14.393 [info] 로그 수준: Info
-2023-09-29 16:59:14.393 [info] "git"에서 찾은 git 유효성을 검사하는 중
-2023-09-29 16:59:14.393 [info] "2.17.1"에서 git "git"을(를) 사용하는 중
-2023-09-29 16:59:14.393 [info] > git rev-parse --show-toplevel [10ms]
-2023-09-29 16:59:14.413 [info] > git rev-parse --show-toplevel [14ms]
-2023-09-29 16:59:14.433 [info] > git rev-parse --show-toplevel [15ms]
-2023-09-29 16:59:14.476 [info] > git rev-parse --show-toplevel [38ms]
