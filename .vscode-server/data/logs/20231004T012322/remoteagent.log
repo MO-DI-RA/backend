@@ -18,3 +18,5 @@
 2023-10-04 01:23:26.783 [info] Adding language packs from the extension ms-ceintl.vscode-language-pack-ko
 2023-10-04 01:23:26.817 [info] Extension installed successfully: ms-ceintl.vscode-language-pack-ko
 2023-10-04 01:23:26.817 [info] Extension 'ms-ceintl.vscode-language-pack-ko' v1.76.2023031509 was successfully installed.
+2023-10-04 01:40:02.240 [info] [127.0.0.1][607227a4][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+2023-10-04 01:40:02.257 [info] [127.0.0.1][b01cd3c0][ExtensionHostConnection] <149> Extension Host Process exited with code: 0, signal: null.
