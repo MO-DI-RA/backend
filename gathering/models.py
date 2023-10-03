@@ -47,6 +47,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
 
     is_superuser = models.BooleanField(default=False)
+    
+    created_at = models.DateTimeField(auto_now=True)
 
     objects = UserManager()  # 헬퍼 클래스 지정
 
