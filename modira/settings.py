@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # My app
     "users",
+    "gathering",
 ]
 
 MIDDLEWARE = [
