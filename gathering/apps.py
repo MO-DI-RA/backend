@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ModiraConfig(AppConfig):
+class GatheringConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'gathering'
