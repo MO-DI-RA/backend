@@ -8,8 +8,6 @@ from django.contrib.auth import authenticate
 
 
 class RegisterAPIView(APIView):
-    # permission_classes = []
-
     def post(self, request):
         serializer = UserSerializer(data=request.data)
 
@@ -41,8 +39,6 @@ class RegisterAPIView(APIView):
 
 
 class LoginAPIView(APIView):
-    # permission_classes = []
-
     def post(self, request):
         # 유저 인증
         user = authenticate(
@@ -80,5 +76,4 @@ class MyPageAPIView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             serializer = UserSerializer(request.user)
-
             return Response(serializer.data, status=status.HTTP_200_OK)
