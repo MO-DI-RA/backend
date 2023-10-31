@@ -1,14 +1,14 @@
 from rest_framework import serializers
 
 from users.models import User
-from gathering.models import Gathering, Comment
+from .models import GatheringPost, Comment
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source="users.nickname")
 
     class Meta:
-        model = Gathering
+        model = GatheringPost
         fields = ["title", "writer", "content"]
 
 
@@ -16,8 +16,8 @@ class PostListSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source="users.nickname")
 
     class Meta:
-        models = Gathering
-        fields = ["id", "title", "wirter", "create_at"]
+        model = GatheringPost
+        fields = ["id", "title", "writer", "created_at"]
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
 
     class Meta:
-        model = Gathering
+        model = GatheringPost
         fields = ["id", "title", "writer", "content", "comments"]
 
     def get_comments(self, obj):
