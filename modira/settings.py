@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     # My app
     "users",
     "gathering",
+    "qna",
 ]
 
 MIDDLEWARE = [

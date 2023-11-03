@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User
-from qna.models import QnA, Answear
+from qna.models import QnA, Answer
 
 
 class QnAListSerializer(serializers.ModelSerializer):
@@ -44,21 +44,21 @@ class QnADetailSerializer(serializers.ModelSerializer):
             "comments",
         ]
 
-    def get_answears(self, obj):
-        answears = [
+    def get_answers(self, obj):
+        answers = [
             {
                 "user": User.objects.get(id=answear.author_id).nickname,
                 "content": answear.content,
                 "created_at": answear.created_at,
                 "updated_at": answear.updated_at,
             }
-            for answear in Answear.objects.filter(post_id=obj.id)
+            for answear in Answer.objects.filter(post_id=obj.id)
         ]
-        return answears
+        return answers
 
-class AnswearSerializer(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source="author_id.nickname")
 
     class Meta:
-        model = Answear
+        model = Answer
         fields = ["id", "writer", "content", "create_at", "updated_at"]
