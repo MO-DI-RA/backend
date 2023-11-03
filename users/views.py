@@ -7,8 +7,11 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 from django.shortcuts import redirect
 
-from allauth.socialaccount.providers.kakao import views as kakao_views
+#
+# from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+
 import requests
 from json import JSONDecodeError
 from django.http import JsonResponse
@@ -101,20 +104,43 @@ KAKAO_CALLBACK_URI = "http://localhost:8000/user/kakao/callback"
 def kakao_login(request):
     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
     return redirect(
-        f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code&scope=account_email"
+        f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
     )
 
 
 def kakao_callback(request):
     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
     code = request.GET.get("code")
-    print(code)
-    # code로 access token 요청
+    # print(code)
     token_request = requests.get(
-        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&code={code}"
+        f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&code={code}",
     )
     token_response_json = token_request.json()
+    access_token = token_response_json.get("access_token")
+
+    profile_request = requests.post(
+        "https://kapi.kakao.com/v2/user/me",
+        headers={
+            "Authorization": f"bearer {access_token}",
+        },
+    )
+    profile_json = profile_request.json()
+    kakao_account = profile_json.get("kakao_account")
+    email = kakao_account.get("email", None)
+    profile = kakao_account.get("profile")
+    nickname = profile.get("nickname")
+    profile_image_url = profile.get("profile_image_url")
+    print(email)
+    print(nickname)
+    print(profile_image_url)
     return JsonResponse(data=token_response_json, status=status.HTTP_200_OK)
+
+
+#
+# class KakaoLogin(SocialLoginView):
+#     adapter_class = kakao_view.KakaoOAuth2Adapter
+#     callback_url = KAKAO_CALLBACK_URI
+#     client_class = OAuth2Client
 
 
 #  sy99Bb99LzH8U04fM_fPl6S_JH4nUIDQ4zsKKclgAAABi5Ug_4KYFzyUYZmfhQ
