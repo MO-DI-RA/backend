@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User
-from qna.models import QnA, Answer
+from .models import QnAPost, Answer
 
 
 class QnAListSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class QnAListSerializer(serializers.ModelSerializer):
     # print(author_profile_image)
 
     class Meta:
-        model = QnA
+        model = QnAPost
         fields = [
             "id",
             "author_id",
@@ -26,6 +26,7 @@ class QnAListSerializer(serializers.ModelSerializer):
 
 
 class QnADetailSerializer(serializers.ModelSerializer):
+    
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True
@@ -33,7 +34,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
 
     class Meta:
-        model = QnA
+        model = QnAPost
         fields = [
             "id",
             "author_id",
@@ -44,7 +45,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
             "comments",
         ]
 
-    def get_answers(self, obj):
+    def get_comments(self, obj):
         answers = [
             {
                 "user": User.objects.get(id=answer.author_id).nickname,
@@ -52,7 +53,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
                 "created_at": answer.created_at,
                 "updated_at": answer.updated_at,
             }
-            for answer in Answer.objects.filter(post_id=obj.id)
+            for answer in Answer.objects.filter(qna_id=obj.id)
         ]
         return answers
 

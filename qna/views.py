@@ -1,4 +1,4 @@
-from .models import QnA, Answer
+from .models import QnAPost, Answer
 from .serializers import (
     QnADetailSerializer,
     QnAListSerializer,
@@ -12,7 +12,7 @@ from django.http import Http404
 
 class ListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request):  # 모든 게시물
-        posts = QnA.objects.all()
+        posts = QnAPost.objects.all()
         serializer = QnAListSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -28,20 +28,20 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
 class PostAPIView(APIView):
     def get_object(self, pk):
         try:
-            return QnA.objects.get(pk=pk)
-        except QnA.DoesNotExist:
+            return QnAPost.objects.get(pk=pk)
+        except QnAPost.DoesNotExist:
             raise Http404
 
     # CRUD 중 R
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
         serializer = QnADetailSerializer(post)
-        return Response(serializer.data)
+        return Response(data=serializer.data)
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
         post = self.get_object(pk)
-        # print(request.user.id)
+        print("_________________", post)
         if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
             serializer = QnADetailSerializer(post, data=request.data)
             if serializer.is_valid():

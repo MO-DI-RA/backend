@@ -2,7 +2,7 @@ from django.db import models
 from users.models import User
 
 
-class QnA(models.Model):
+class QnAPost(models.Model):
     author_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -18,17 +18,16 @@ class QnA(models.Model):
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
-class Answear(models.Model):
+class Answer(models.Model):
     author_id = models.ForeignKey(
         User,
-        related_name="users",
         on_delete=models.CASCADE,
     )
-    post_id = models.ForeignKey(
-        QnA, verbose_name="qnas", on_delete=models.CASCADE
+    qna_id = models.ForeignKey(
+        QnAPost, verbose_name="qnas", on_delete=models.CASCADE
     )
     content = models.CharField(
-        verbose_name="answear",
+        verbose_name="answer",
         max_length=300,
     )
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import QnA, Answer
+from .models import QnAPost, Answer
 
 # Register your models here.
-admin.site.register(QnA)
+admin.site.register(QnAPost)
 admin.site.register(Answer)
