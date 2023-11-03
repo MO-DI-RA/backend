@@ -40,9 +40,9 @@ class PostAPIView(APIView):
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
+        post = self.get_object(pk)
         # print(request.user.id)
         if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
-            post = self.get_object(pk)
             serializer = PostDetailSerializer(post, data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -55,8 +55,8 @@ class PostAPIView(APIView):
 
     # CRUD 중 D
     def delete(self, request, pk, format=None):
+        post = self.get_object(pk)
         if post.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
-            post = self.get_object(pk)
             post.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:

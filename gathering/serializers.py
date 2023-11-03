@@ -5,20 +5,44 @@ from gathering.models import GatheringPost, Comment
 
 
 class PostListSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source="author_id.nickname")
+    author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
+
+    author_profile_image = serializers.ImageField(
+        source="author_id.profile_image", read_only=True
+    )
+    # print(author_profile_image)
 
     class Meta:
         model = GatheringPost
-        fields = ["id", "author_id", "title", "content", "created_at", "author"]
+        fields = [
+            "id",
+            "author_id",
+            "author_profile_image",
+            "author_nickname",
+            "title",
+            "content",
+            "created_at",
+        ]
 
 
 class PostDetailSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source="users.nickname")
+    author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
+    author_profile_image = serializers.ImageField(
+        source="author_id.profile_image", read_only=True
+    )
     comments = serializers.SerializerMethodField()
 
     class Meta:
         model = GatheringPost
-        fields = ["id", "title", "content", "comments", "author"]
+        fields = [
+            "id",
+            "author_id",
+            "author_nickname",
+            "author_profile_image",
+            "title",
+            "content",
+            "comments",
+        ]
 
     def get_comments(self, obj):
         comments = [
