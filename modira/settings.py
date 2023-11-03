@@ -33,7 +33,16 @@ INSTALLED_APPS = [
     "users",
     "qna",
     "gathering",
+    # allauth
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.kakao",
 ]
+# Kakao API
+SOCIAL_AUTH_KAKAO_CLIENT_ID = "e1e4af98ca9f6131da2d779f616737bc"
+SOCIAL_AUTH_KAKAO_SECRET = "977163"
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # 미들웨어 최상잔에 CORS 미들웨어를 작성해 주어야 한다.
@@ -44,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 CORS_ALLOWED_ORIGINS = [  # 사용하는 URL을 허용
