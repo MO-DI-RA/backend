@@ -2,7 +2,7 @@ from django.db import models
 from users.models import User
 
 
-class QnA(models.Model):
+class QnAPost(models.Model):
     author_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -21,11 +21,10 @@ class QnA(models.Model):
 class Answer(models.Model):
     author_id = models.ForeignKey(
         User,
-        related_name="responsers",
         on_delete=models.CASCADE,
     )
     qna_id = models.ForeignKey(
-        QnA, verbose_name="qnas", on_delete=models.CASCADE
+        QnAPost, verbose_name="qnas", on_delete=models.CASCADE
     )
     content = models.CharField(
         verbose_name="answer",

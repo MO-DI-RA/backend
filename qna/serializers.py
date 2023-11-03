@@ -1,7 +1,11 @@
 from rest_framework import serializers
 
 from users.models import User
+<<<<<<< HEAD
 from qna.models import QnA, Answer
+=======
+from .models import QnAPost, Answer
+>>>>>>> 0023d008c97580347a3827212c5c60ae4a2892fc
 
 
 class QnAListSerializer(serializers.ModelSerializer):
@@ -13,7 +17,7 @@ class QnAListSerializer(serializers.ModelSerializer):
     # print(author_profile_image)
 
     class Meta:
-        model = QnA
+        model = QnAPost
         fields = [
             "id",
             "author_id",
@@ -26,6 +30,7 @@ class QnAListSerializer(serializers.ModelSerializer):
 
 
 class QnADetailSerializer(serializers.ModelSerializer):
+    
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True
@@ -33,7 +38,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
 
     class Meta:
-        model = QnA
+        model = QnAPost
         fields = [
             "id",
             "author_id",
@@ -44,15 +49,23 @@ class QnADetailSerializer(serializers.ModelSerializer):
             "comments",
         ]
 
+<<<<<<< HEAD
     def get_answers(self, obj):
+=======
+    def get_comments(self, obj):
+>>>>>>> 0023d008c97580347a3827212c5c60ae4a2892fc
         answers = [
             {
-                "user": User.objects.get(id=answear.author_id).nickname,
-                "content": answear.content,
-                "created_at": answear.created_at,
-                "updated_at": answear.updated_at,
+                "user": User.objects.get(id=answer.author_id).nickname,
+                "content": answer.content,
+                "created_at": answer.created_at,
+                "updated_at": answer.updated_at,
             }
+<<<<<<< HEAD
             for answear in Answer.objects.filter(post_id=obj.id)
+=======
+            for answer in Answer.objects.filter(qna_id=obj.id)
+>>>>>>> 0023d008c97580347a3827212c5c60ae4a2892fc
         ]
         return answers
 
