@@ -69,7 +69,9 @@ class LoginAPIView(APIView):
             res.set_cookie("refresh", refresh_token, httponly=True)
             return res
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "등록되지 않은 아이디 입니다."}, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class UserDetailAPIView(APIView):
@@ -78,4 +80,6 @@ class UserDetailAPIView(APIView):
             serializer = UserSerializer(request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
+            )

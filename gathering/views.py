@@ -40,15 +40,26 @@ class PostAPIView(APIView):
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
-        post = self.get_object(pk)
-        serializer = PostDetailSerializer(post, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+        # print(request.user.id)
+        if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
+            post = self.get_object(pk)
+            serializer = PostDetailSerializer(post, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(
+                {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # CRUD 중 D
     def delete(self, request, pk, format=None):
-        post = self.get_object(pk)
-        post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if post.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
+            post = self.get_object(pk)
+            post.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(
+                {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+            )

@@ -18,7 +18,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = GatheringPost
-        fields = ["id", "title", "writer", "content", "comments"]
+        fields = ["id", "title", "content", "comments", "author"]
 
     def get_comments(self, obj):
         comments = [
