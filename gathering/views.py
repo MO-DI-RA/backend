@@ -1,7 +1,5 @@
-from django.shortcuts import render
 from .models import GatheringPost, Comment
 from .serializers import (
-    PostCreateSerializer,
     PostDetailSerializer,
     PostListSerializer,
     CommentSerializer,
