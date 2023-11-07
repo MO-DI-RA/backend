@@ -12,16 +12,16 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Comment',
+            name='Answer',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', models.CharField(max_length=300, verbose_name='comment')),
+                ('content', models.CharField(max_length=300, verbose_name='answer')),
                 ('created_at', models.DateTimeField(auto_now_add=True, verbose_name='created at')),
                 ('updated_at', models.DateTimeField(auto_now=True, verbose_name='updated at')),
             ],
         ),
         migrations.CreateModel(
-            name='GatheringPost',
+            name='QnAPost',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=64, verbose_name='title')),

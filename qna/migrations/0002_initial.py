@@ -9,24 +9,24 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('qna', '0001_initial'),
         ('users', '0001_initial'),
-        ('gathering', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='gatheringpost',
+            model_name='qnapost',
             name='author_id',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user'),
         ),
         migrations.AddField(
-            model_name='comment',
+            model_name='answer',
             name='author_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='users', to='users.user'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='users.user'),
         ),
         migrations.AddField(
-            model_name='comment',
-            name='post_id',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='gathering.gatheringpost', verbose_name='gatherings'),
+            model_name='answer',
+            name='qna_id',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='qna.qnapost', verbose_name='qnas'),
         ),
     ]

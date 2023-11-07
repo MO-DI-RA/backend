@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
 from users.models import User
-from gathering.models import GatheringPost, Comment
+from .models import QnAPost, Answer
 
 
-class PostListSerializer(serializers.ModelSerializer):
+class QnAListSerializer(serializers.ModelSerializer):
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
 
     author_profile_image = serializers.ImageField(
@@ -13,7 +13,7 @@ class PostListSerializer(serializers.ModelSerializer):
     # print(author_profile_image)
 
     class Meta:
-        model = GatheringPost
+        model = QnAPost
         fields = [
             "id",
             "author_id",
@@ -25,7 +25,8 @@ class PostListSerializer(serializers.ModelSerializer):
         ]
 
 
-class PostDetailSerializer(serializers.ModelSerializer):
+class QnADetailSerializer(serializers.ModelSerializer):
+    
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True
@@ -33,7 +34,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
 
     class Meta:
-        model = GatheringPost
+        model = QnAPost
         fields = [
             "id",
             "author_id",
@@ -45,21 +46,20 @@ class PostDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_comments(self, obj):
-        comments = [
+        answers = [
             {
-                "user": User.objects.get(id=comment.author_id).nickname,
-                "content": comment.content,
-                "created_at": comment.created_at,
-                "updated_at": comment.updated_at,
+                "user": User.objects.get(id=answer.author_id).nickname,
+                "content": answer.content,
+                "created_at": answer.created_at,
+                "updated_at": answer.updated_at,
             }
-            for comment in Comment.objects.filter(post_id=obj.id)
+            for answer in Answer.objects.filter(qna_id=obj.id)
         ]
-        return comments
+        return answers
 
-
-class CommentSerializer(serializers.ModelSerializer):
+class AnswerSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source="author_id.nickname")
 
     class Meta:
-        model = Comment
+        model = Answer
         fields = ["id", "writer", "content", "create_at", "updated_at"]
