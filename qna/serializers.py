@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User
-from .models import QnAPost, Answer
+from .models import QnAPost, Answer, AnswerComment
 
 
 class QnAListSerializer(serializers.ModelSerializer):
@@ -22,16 +22,16 @@ class QnAListSerializer(serializers.ModelSerializer):
             "title",
             "content",
             "created_at",
+            "status",
         ]
 
 
 class QnADetailSerializer(serializers.ModelSerializer):
-    
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True
     )
-    comments = serializers.SerializerMethodField()
+    answers = serializers.SerializerMethodField()
 
     class Meta:
         model = QnAPost
@@ -42,13 +42,15 @@ class QnADetailSerializer(serializers.ModelSerializer):
             "author_profile_image",
             "title",
             "content",
-            "comments",
+            "answers",
+            "status",
         ]
 
-    def get_comments(self, obj):
+    def get_answers(self, obj):
         answers = [
             {
-                "user": User.objects.get(id=answer.author_id).nickname,
+                "author_nickname": answer.author_id.nickname,
+                # "author_profile_image" : comment.author_id.profile_image, 보류,
                 "content": answer.content,
                 "created_at": answer.created_at,
                 "updated_at": answer.updated_at,
@@ -59,7 +61,33 @@ class QnADetailSerializer(serializers.ModelSerializer):
 
 class AnswerSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source="author_id.nickname")
-
+    author_profile_image = serializers.ImageField(
+        source="author_id.profile_image", read_only=True
+    )
+    answercomments = serializers.SerializerMethodField()
+    
     class Meta:
         model = Answer
-        fields = ["id", "writer", "content", "create_at", "updated_at"]
+        fields = ["id", "qna_id", "author_id", "writer", "author_profile_image", "content", "answercomments", "created_at", "updated_at"]
+
+    def get_answercomments(self, obj):
+        comments = [
+            {
+                "author_nickname": AnswerComment.author_id.nickname,
+                # "author_profile_image" : AnswerComment.author_id.profile_image, 보류
+                "content": AnswerComment.content,
+                "created_at": AnswerComment.created_at,
+                "updated_at": AnswerComment.updated_at,
+            }
+            for AnswerComment in AnswerComment.objects.filter(answer_id=obj.id)
+        ]
+        return comments
+    
+class AnswerCommentSerializer(serializers.ModelSerializer):
+    writer = serializers.ReadOnlyField(source="author_id.nickname")
+    author_profile_image = serializers.ImageField(
+        source="author_id.profile_image", read_only=True
+    )
+    class Meta:
+        model = AnswerComment
+        fields = ["id", "answer_id", "author_id", "writer", "author_profile_image", "content", "created_at", "updated_at"]
