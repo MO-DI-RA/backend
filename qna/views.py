@@ -21,6 +21,7 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
         serializer = QnAListSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
