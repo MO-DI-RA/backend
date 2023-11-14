@@ -19,4 +19,8 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("user/", include("users.urls")),
+    path("api/user/", include("allauth.urls")),
+    path("gathering/", include("gathering.urls")),
+    path("qna/", include("qna.urls")),
+    # path("accounts/", include("allauth.urls"), name="socialaccount_signup"),
 ]

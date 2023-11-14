@@ -42,6 +42,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     nickname = models.CharField(
         max_length=20, unique=True, null=False, blank=False
     )  # nickname
+
+    profile_image = models.ImageField(
+        upload_to=None, blank=True, null=True
+    )  # image path 정해줘야함
+
     is_active = models.BooleanField(default=True)
 
     is_staff = models.BooleanField(default=False)
