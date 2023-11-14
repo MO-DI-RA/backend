@@ -99,8 +99,7 @@ class UserDetailAPIView(APIView):
             )
 
 
-#
-#
+# .env 파일로 숨겨야함
 
 SOCIAL_AUTH_KAKAO_CLIENT_ID = "e1e4af98ca9f6131da2d779f616737bc"
 SOCIAL_AUTH_KAKAO_SECRET = "977163"
