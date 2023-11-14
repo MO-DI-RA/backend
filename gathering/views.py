@@ -64,6 +64,7 @@ class PostAPIView(APIView):
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
+
 class PostToggleStatus(APIView):
     def get_object(self, pk):
         try:
@@ -74,13 +75,14 @@ class PostToggleStatus(APIView):
     def put(self, request, pk, format=None):
         post = self.get_object(pk)
         if post.author_id.id == request.user.id:
-            post.status = not post.status 
+            post.status = not post.status
             post.save()
             return Response({"message": "게시물 상태가 토글되었습니다."}, status=status.HTTP_200_OK)
         else:
             return Response(
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
+
 
 class CommentAPIView(APIView):
     def get_object(self, pk):
@@ -120,6 +122,7 @@ class CommentAPIView(APIView):
             return Response(
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
+
 
 class CommentListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request):  # 모든 게시물
