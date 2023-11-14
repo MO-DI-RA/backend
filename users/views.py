@@ -110,7 +110,7 @@ KAKAO_CALLBACK_URI = "http://localhost:8000/user/kakao/callback/"
 def kakao_login(request):
     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
     return redirect(
-        f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code&scope=account_email"
+        f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
     )
 
 
@@ -123,7 +123,7 @@ def kakao_callback(request):
     )
     token_response_json = token_request.json()
     access_token = token_response_json.get("access_token")
-
+    print(token_response_json)
     profile_request = requests.post(
         "https://kapi.kakao.com/v2/user/me",
         headers={
@@ -134,6 +134,9 @@ def kakao_callback(request):
     profile_json = profile_request.json()
     kakao_account = profile_json.get("kakao_account")
     email = kakao_account.get("email", None)
+    profile = kakao_account.get("profile", None)
+    nickname = profile.get("nickname", None)
+    profile_image_url = profile.get("profile_image_url", None)
 
     try:
         user = User.objects.get(email=email)
@@ -167,6 +170,7 @@ def kakao_callback(request):
         accept = requests.post(
             "http://localhost:8000/user/kakao/login/finish/", data=data
         )
+        print(accept)
         accept_status = accept.status_code
 
         # 뭔가 중간에 문제가 생기면 에러
@@ -188,5 +192,5 @@ def kakao_callback(request):
 # class KakaoLogin(SocialLoginView):
 class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
-    # callback_url = KAKAO_CALLBACK_URI
+    callback_url = KAKAO_CALLBACK_URI
     client_class = OAuth2Client
