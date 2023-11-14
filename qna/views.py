@@ -64,6 +64,7 @@ class PostAPIView(APIView):
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
+
 class PostToggleStatus(APIView):
     def get_object(self, pk):
         try:
@@ -74,13 +75,14 @@ class PostToggleStatus(APIView):
     def put(self, request, pk, format=None):
         post = self.get_object(pk)
         if post.author_id.id == request.user.id:
-            post.status = not post.status 
+            post.status = not post.status
             post.save()
             return Response({"message": "게시물 상태가 토글되었습니다."}, status=status.HTTP_200_OK)
         else:
             return Response(
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
+
 
 class AnswerAPIView(APIView):
     def get_object(self, pk):
@@ -121,6 +123,7 @@ class AnswerAPIView(APIView):
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
+
 class AnswerListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request):  # 모든 게시물
         comments = Answer.objects.all()
@@ -133,7 +136,8 @@ class AnswerListAPIView(APIView):  ## auther_id 도 나와야함
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class AnswerCommentAPIView(APIView):
     def get_object(self, pk):
         try:
@@ -161,7 +165,8 @@ class AnswerCommentAPIView(APIView):
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-## 자기거만 삭제
+
+    ## 자기거만 삭제
     # CRUD 중 D
     def delete(self, request, pk, format=None):
         comment = self.get_object(pk)
@@ -172,6 +177,7 @@ class AnswerCommentAPIView(APIView):
             return Response(
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
+
 
 class AnswerCommentListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request, pk, comment_pk):  # 모든 게시물
