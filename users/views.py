@@ -1,22 +1,19 @@
-from rest_framework.views import APIView
-from .serializers import *
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework import status
-from rest_framework.response import Response
+from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.shortcuts import redirect
-from allauth.socialaccount.models import SocialAccount
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
-#
 from dj_rest_auth.registration.views import SocialLoginView
+from allauth.socialaccount.models import SocialAccount
 from allauth.socialaccount.providers.kakao import views as kakao_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 
-# from allauth import SocialLoginSerializer
+from .serializers import *
 
 import requests
-from json import JSONDecodeError
-from django.http import JsonResponse
 
 
 class RegisterAPIView(APIView):
@@ -43,8 +40,8 @@ class RegisterAPIView(APIView):
             )
 
             # jwt 토큰 => 쿠키에 저장
-            res.set_cookie("access", access_token, httponly=True)
-            res.set_cookie("refresh", refresh_token, httponly=True)
+            # res.set_cookie("access", access_token, httponly=True)
+            # res.set_cookie("refresh", refresh_token, httponly=True)
             # print(res)
             return res
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -87,7 +84,6 @@ class LoginAPIView(APIView):
             )
 
 
-#
 class UserDetailAPIView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
@@ -98,33 +94,49 @@ class UserDetailAPIView(APIView):
                 {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
             )
 
+    def put(self, request):  # 프로필 사진 업데이트
+        pass
+
+
+# def kakao_test(request):
+#     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
+#     return redirect(
+#         f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
+#     )
+#
+#
+# def kakao_callback(request):
+#     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
+#     code = request.GET.get("code")
+#     print(code)
+#     token_request = requests.get(
+#         f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&code={code}",
+#     )
+#     return JsonResponse(token_request.json())
 
 # .env 파일로 숨겨야함
 
 SOCIAL_AUTH_KAKAO_CLIENT_ID = "e1e4af98ca9f6131da2d779f616737bc"
 SOCIAL_AUTH_KAKAO_SECRET = "977163"
-KAKAO_CALLBACK_URI = "http://localhost:8000/user/kakao/callback/"
+KAKAO_CALLBACK_URI = "http://127.0.0.1:3000/user/kakao/callback/"
 
 
 def kakao_login(request):
     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
-    return redirect(
-        f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
-    )
 
-
-def kakao_callback(request):
-    client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
-    code = request.GET.get("code")
-
+    code = request.GET["code"]  # code 쿼리스트링을 찾아서
     token_request = requests.get(
         f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&code={code}",
     )
     token_response_json = token_request.json()
     access_token = token_response_json.get("access_token")
-    print(token_response_json)
+    code_error_msg = token_response_json.get("error")
+
+    if code_error_msg:  # 거의 대부분의 상황이 code가 만료나 중복
+        return JsonResponse({"err_msg": "failed to signin"})
+
     profile_request = requests.post(
-        "https://kapi.kakao.com/v2/user/me",
+        *"https://kapi.kakao.com/v2/user/me",
         headers={
             "Authorization": f"bearer {access_token}",
         },
@@ -133,15 +145,13 @@ def kakao_callback(request):
     profile_json = profile_request.json()
     kakao_account = profile_json.get("kakao_account")
     email = kakao_account.get("email", None)
-    profile = kakao_account.get("profile", None)
-    nickname = profile.get("nickname", None)
-    profile_image_url = profile.get("profile_image_url", None)
+
+    print(email)
 
     try:
         user = User.objects.get(email=email)
         social_user = SocialAccount.objects.get(user=user)
 
-        print("?>", social_user)
         if social_user.provider != "kakao":
             return JsonResponse(
                 {"err_msg": "no matching social type"},
@@ -149,17 +159,19 @@ def kakao_callback(request):
             )
 
         data = {"access_token": access_token, "code": code}
-        print(data)
+
         accept = requests.post(
             "http://localhost:8000/user/kakao/login/finish/", data=data
         )
         accept_status = accept.status_code
+        # print(accept_status)
 
         if accept_status != 200:
             return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
 
         accept_json = accept.json()
         print(accept_json)
+        print("Login 성공")
         accept_json.pop("user", None)
         return JsonResponse(accept_json)
 
@@ -176,8 +188,10 @@ def kakao_callback(request):
         if accept_status != 200:
             return JsonResponse({"err_msg": "failed to signup"}, status=accept_status)
 
-        accept_json = accept.json()  # 왜 key를 주는지는 잘 모르겠음
+        accept_json = accept.json()
         accept_json.pop("user", None)
+        print(accept_json)
+        print("Kakao 회원가입 성공")
         return JsonResponse(accept_json)
 
     except SocialAccount.DoesNotExist:
@@ -188,7 +202,6 @@ def kakao_callback(request):
         )
 
 
-# class KakaoLogin(SocialLoginView):
 class KakaoLogin(SocialLoginView):
     adapter_class = kakao_view.KakaoOAuth2Adapter
     callback_url = KAKAO_CALLBACK_URI

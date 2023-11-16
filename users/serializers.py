@@ -21,7 +21,7 @@ class KaKaoSocialSerializer(SocialLoginSerializer):
     def custom_save(self, request, sociallogin):
         user = sociallogin.user
         extra_data = sociallogin.account.extra_data["kakao_account"]["profile"]
-        print("여기가 출력분 입니다. ", extra_data)
+        # print("여기가 출력분 입니다. ", extra_data)
         user.nickname = extra_data["nickname"]
-        user.profile_image = extra_data["profile_image_url"]
+        user.profile_image = extra_data["profile_image_url"]  # profile 딱히 필요 없을듯
         user.save()
