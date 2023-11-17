@@ -94,8 +94,18 @@ class UserDetailAPIView(APIView):
                 {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
             )
 
-    def put(self, request):  # 프로필 사진 업데이트
-        pass
+    def put(self, request):  # 프로필 사진 업데이트 닉네임, 유저 프로필 사진만 받아서 put
+        if request.user.is_authenticated:
+            serializer = UserUpdateSerializers(request.user, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
 
 # def kakao_test(request):
@@ -136,7 +146,7 @@ def kakao_login(request):
         return JsonResponse({"err_msg": "failed to signin"})
 
     profile_request = requests.post(
-        *"https://kapi.kakao.com/v2/user/me",
+        "https://kapi.kakao.com/v2/user/me",
         headers={
             "Authorization": f"bearer {access_token}",
         },

@@ -17,6 +17,12 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserUpdateSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["nickname", "profile_image"]
+
+
 class KaKaoSocialSerializer(SocialLoginSerializer):
     def custom_save(self, request, sociallogin):
         user = sociallogin.user
