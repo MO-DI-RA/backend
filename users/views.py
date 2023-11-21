@@ -84,7 +84,7 @@ class LoginAPIView(APIView):
             )
 
 
-class UserDetailAPIView(APIView):
+class UserDetailAPIView(APIView):  #
     def get(self, request):
         if request.user.is_authenticated:
             serializer = UserSerializer(request.user)

@@ -11,12 +11,13 @@ class QnAListSerializer(serializers.ModelSerializer):
         source="author_id.profile_image", read_only=True
     )
     # print(author_profile_image)
+    # auther_id = serializers.IntegerField(source="author_id", read_only=True)
 
     class Meta:
         model = QnAPost
         fields = [
             "id",
-            "author_id",
+            # "author_id",
             "author_profile_image",
             "author_nickname",
             "title",
