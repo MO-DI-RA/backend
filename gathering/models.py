@@ -15,6 +15,7 @@ class GatheringPost(models.Model):
         verbose_name="content",
         max_length=2000,
     )
+    status = models.BooleanField(verbose_name="status", default=False)
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
@@ -22,7 +23,6 @@ class GatheringPost(models.Model):
 class Comment(models.Model):
     author_id = models.ForeignKey(
         User,
-        related_name="users",
         on_delete=models.CASCADE,
     )
     post_id = models.ForeignKey(

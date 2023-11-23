@@ -1,11 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User
-<<<<<<< HEAD
-from qna.models import QnA, Answer
-=======
-from .models import QnAPost, Answer
->>>>>>> 0023d008c97580347a3827212c5c60ae4a2892fc
+from .models import QnAPost, Answer, AnswerComment
 
 
 class QnAListSerializer(serializers.ModelSerializer):
@@ -15,27 +11,28 @@ class QnAListSerializer(serializers.ModelSerializer):
         source="author_id.profile_image", read_only=True
     )
     # print(author_profile_image)
+    # auther_id = serializers.IntegerField(source="author_id", read_only=True)
 
     class Meta:
         model = QnAPost
         fields = [
             "id",
-            "author_id",
+            # "author_id",
             "author_profile_image",
             "author_nickname",
             "title",
             "content",
             "created_at",
+            "status",
         ]
 
 
 class QnADetailSerializer(serializers.ModelSerializer):
-    
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True
     )
-    comments = serializers.SerializerMethodField()
+    answers = serializers.SerializerMethodField()
 
     class Meta:
         model = QnAPost
@@ -46,32 +43,74 @@ class QnADetailSerializer(serializers.ModelSerializer):
             "author_profile_image",
             "title",
             "content",
-            "comments",
+            "answers",
+            "status",
         ]
 
-<<<<<<< HEAD
     def get_answers(self, obj):
-=======
-    def get_comments(self, obj):
->>>>>>> 0023d008c97580347a3827212c5c60ae4a2892fc
         answers = [
             {
-                "user": User.objects.get(id=answer.author_id).nickname,
+                "author_nickname": answer.author_id.nickname,
+                # "author_profile_image" : comment.author_id.profile_image, 보류,
                 "content": answer.content,
                 "created_at": answer.created_at,
                 "updated_at": answer.updated_at,
             }
-<<<<<<< HEAD
-            for answear in Answer.objects.filter(post_id=obj.id)
-=======
             for answer in Answer.objects.filter(qna_id=obj.id)
->>>>>>> 0023d008c97580347a3827212c5c60ae4a2892fc
         ]
         return answers
 
+
 class AnswerSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source="author_id.nickname")
+    author_profile_image = serializers.ImageField(
+        source="author_id.profile_image", read_only=True
+    )
+    answercomments = serializers.SerializerMethodField()
 
     class Meta:
         model = Answer
-        fields = ["id", "writer", "content", "create_at", "updated_at"]
+        fields = [
+            "id",
+            "qna_id",
+            "author_id",
+            "writer",
+            "author_profile_image",
+            "content",
+            "answercomments",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_answercomments(self, obj):
+        comments = [
+            {
+                "author_nickname": AnswerComment.author_id.nickname,
+                # "author_profile_image" : AnswerComment.author_id.profile_image, 보류
+                "content": AnswerComment.content,
+                "created_at": AnswerComment.created_at,
+                "updated_at": AnswerComment.updated_at,
+            }
+            for AnswerComment in AnswerComment.objects.filter(answer_id=obj.id)
+        ]
+        return comments
+
+
+class AnswerCommentSerializer(serializers.ModelSerializer):
+    writer = serializers.ReadOnlyField(source="author_id.nickname")
+    author_profile_image = serializers.ImageField(
+        source="author_id.profile_image", read_only=True
+    )
+
+    class Meta:
+        model = AnswerComment
+        fields = [
+            "id",
+            "answer_id",
+            "author_id",
+            "writer",
+            "author_profile_image",
+            "content",
+            "created_at",
+            "updated_at",
+        ]
