@@ -12,7 +12,7 @@ urlpatterns = [
         AnswerCommentListAPIView.as_view(),
     ),
     path(
-        "posts/<int:pk>/comments/<int:comment_pk>/reply/<int:reply_pk>",
+        "posts/<int:pk>/comments/<int:comment_pk>/reply/<int:reply_pk>/",
         AnswerCommentAPIView.as_view(),
     ),
     path("posts/<int:pk>/toggle/", PostToggleStatus.as_view()),

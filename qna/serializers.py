@@ -64,7 +64,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
             {
                 "answer_id": answer.id,
                 "author_nickname": answer.author_id.nickname,
-                # "author_profile_image": answer.author_id.profile_image,
+                # "author_profile_image" : comment.author_id.profile_image, 보류,
                 "content": answer.content,
                 "created_at": answer.created_at,
                 "updated_at": answer.updated_at,
@@ -99,7 +99,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         comments = [
             {
                 "author_nickname": AnswerComment.author_id.nickname,
-                # "author_profile_image" : AnswerComment.author_id.profile_image, 보류
+                # "author_profile_image" : AnswerComment.author_id.profile_image,
                 "content": AnswerComment.content,
                 "created_at": AnswerComment.created_at,
                 "updated_at": AnswerComment.updated_at,
@@ -115,6 +115,7 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
         source="author_id.profile_image", read_only=True
     )
 
+    #
     class Meta:
         model = AnswerComment
         fields = [
@@ -127,3 +128,6 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+
+#

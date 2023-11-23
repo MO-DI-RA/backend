@@ -82,7 +82,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "post_id",
-            # "author_id",
+            # #"author_id",
             "writer",
             "author_profile_image",
             "content",
