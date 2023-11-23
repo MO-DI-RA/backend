@@ -8,7 +8,8 @@ from .views import (
     RegisterAPIView,
     LoginAPIView,
     UserDetailAPIView,
-    kakao_callback,
+    # kakao_callback,
+    # kakao_test,
     kakao_login,
     KakaoLogin,
 )
@@ -20,7 +21,8 @@ urlpatterns = [
     path("refresh/", TokenRefreshView.as_view()),
     path("verify/", TokenVerifyView.as_view()),
     path("mypage/", UserDetailAPIView.as_view()),
-    path("kakao/login/", kakao_login, name="kakao_login"),
-    path("kakao/callback/", kakao_callback, name="kakao_callback"),
+    # path("kakao/login/", kakao_test, name="kakao_login"),  # with react
+    path("kakao/login/", kakao_login, name="kakao_test"),
+    # path("kakao/callback/", kakao_callback, name="kakao_callback"),
     path("kakao/login/finish/", KakaoLogin.as_view()),
 ]

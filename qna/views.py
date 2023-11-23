@@ -18,10 +18,11 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        print(request.user.id)
         serializer = QnAListSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
-            serializer.save()
-
+            serializer.save(author_id_id=request.user.id)  # 이런식으로 바꿔줘
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

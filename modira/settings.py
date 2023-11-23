@@ -54,7 +54,7 @@ AUTH_USER_MODEL = "users.User"
 #     "SOCIAL_LOGIN_SERIALIZER": "users.serializers.KaKaoSocialSerializer"
 # }
 
-SOCIALACCOUNT_ADAPTER = "users.adapter.CustomSocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "users.adapter.KakaoSocialAccountAdapter"
 
 REST_AUTH = {
     "USE_JWT": True,
@@ -121,7 +121,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [  # 사용하는 URL을 허용
-    "http://localhost:3000",  # React를 기본으로 npm run start 했을때 사용하는 URL
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+    # React를 기본으로 npm run start 했을때 사용하는 URL
 ]
 
 ROOT_URLCONF = "modira.urls"
