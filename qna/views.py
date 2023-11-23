@@ -4,7 +4,6 @@ from .serializers import (
     QnAListSerializer,
     AnswerSerializer,
     AnswerCommentSerializer,
-    InterestSerializer,
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -23,11 +22,12 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
     def post(self, request):
         if request.user.is_authenticated:
             serializer = QnAListSerializer(data=request.data)
-            print(request.data)
             if serializer.is_valid():
                 serializer.save(author_id_id=request.user.id)  # 이런식으로 바꿔줘
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 # post
@@ -46,28 +46,34 @@ class PostAPIView(APIView):
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
-        post = self.get_object(pk)
-        if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
-            serializer = QnADetailSerializer(post, data=request.data)
-            if serializer.is_valid():
-                serializer.save(author_id_id=request.user.id)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.user.is_authenticated:
+            post = self.get_object(pk)
+            if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
+                serializer = QnADetailSerializer(post, data=request.data)
+                if serializer.is_valid():
+                    serializer.save(author_id_id=request.user.id)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(
-                {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     # CRUD 중 D
     def delete(self, request, pk, format=None):
-        post = self.get_object(pk)
-        if post.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
-            post.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_authenticated:
+            post = self.get_object(pk)
+            if post.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
+                post.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                    {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
         else:
-            return Response(
-                {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class PostViewSet(generics.ListAPIView):
@@ -77,32 +83,25 @@ class PostViewSet(generics.ListAPIView):
     search_fields = ["title"]
 
 
-class InterestedPost(APIView):
-    def post(self, request, post_id):
-        serializer = InterestSerializer(data=request.data)
-        print(request.user.id)
-        if serializer.is_valid():
-            serializer.save(user_id=request.user.id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class LikeAPIView(APIView):
     def post(self, request, post_id):
-        user = request.user
-        post = QnAPost.objects.get(id=post_id)
-        print(post)
-        print(user)
-        # 이미 좋아요가 눌렸는지 확인
-        like, created = Like.objects.get_or_create(user=user, post=post)
-        if not created:
-            # 이미 좋아요가 되어있다면 제거
-            like.delete()
-            return Response(
-                {"message": "좋아요가 취소되었습니다."}, status=status.HTTP_204_NO_CONTENT
-            )
+        if request.user.is_authenticated:
+            user = request.user
+            post = QnAPost.objects.get(id=post_id)  # 있는지 없는지 처리 해야함
+            print(post)
+            print(user)
+            # 이미 좋아요가 눌렸는지 확인
+            like, created = Like.objects.get_or_create(user=user, post=post)
+            if not created:
+                # 이미 좋아요가 되어있다면 제거
+                like.delete()
+                return Response(
+                    {"message": "좋아요가 취소되었습니다."}, status=status.HTTP_204_NO_CONTENT
+                )
+            else:
+                return Response({"message": "좋아요!"}, status=status.HTTP_201_CREATED)
         else:
-            return Response({"message": "좋아요!"}, status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class UserPostAPIView(APIView):
@@ -115,25 +114,16 @@ class UserPostAPIView(APIView):
 
 class UserInterestListAPI(APIView):
     def get(self, request):
-        user = request.user
-        likes = Like.objects.filter(user=user)
-        liked_posts = QnAPost.objects.filter(
-            id__in=likes.values_list("post", flat=True)
-        )
-        serializer = QnAListSerializer(liked_posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-#     def get(self, request):  # 모든 게시물
-#         interested_posts = (
-#             InterestedPost.objects.all()
-#             .filter(user=request.user.id)
-#             .values_list("post", flat=True)
-#         )
-#
-#         posts = QnAPost.objects.filter(id__in=interested_posts)
-#         serializer = QnAListSerializer(posts, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.user.is_authenticated:
+            user = request.user
+            likes = Like.objects.filter(user=user)
+            liked_posts = QnAPost.objects.filter(
+                id__in=likes.values_list("post", flat=True)
+            )
+            serializer = QnAListSerializer(liked_posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class PostToggleStatus(APIView):
@@ -144,15 +134,20 @@ class PostToggleStatus(APIView):
             raise Http404
 
     def put(self, request, pk, format=None):
-        post = self.get_object(pk)
-        if post.author_id.id == request.user.id:
-            post.status = not post.status
-            post.save()
-            return Response({"message": "게시물 상태가 토글되었습니다."}, status=status.HTTP_200_OK)
+        if request.user.is_authenticated:
+            post = self.get_object(pk)
+            if post.author_id.id == request.user.id:
+                post.status = not post.status
+                post.save()
+                return Response(
+                    {"message": "게시물 상태가 토글되었습니다."}, status=status.HTTP_200_OK
+                )
+            else:
+                return Response(
+                    {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
         else:
-            return Response(
-                {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
+            Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class AnswerAPIView(APIView):
@@ -203,11 +198,14 @@ class AnswerListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, pk):
-        serializer = AnswerSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author_id_id=request.user.id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            serializer = AnswerSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(author_id_id=request.user.id)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class AnswerCommentAPIView(APIView):
@@ -225,30 +223,36 @@ class AnswerCommentAPIView(APIView):
 
     # CRUD 중 U
     def put(self, request, pk, comment_pk, reply_pk, format=None):
-        comment = self.get_object(reply_pk)
-        # print(request.user.id)
-        if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
-            serializer = AnswerCommentSerializer(comment, data=request.data)
-            if serializer.is_valid():
-                serializer.save(author_id_id=request.user.id)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.user.is_authenticated:
+            comment = self.get_object(reply_pk)
+            # print(request.user.id)
+            if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
+                serializer = AnswerCommentSerializer(comment, data=request.data)
+                if serializer.is_valid():
+                    serializer.save(author_id_id=request.user.id)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(
-                {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     ## 자기거만 삭제
     # CRUD 중 D
     def delete(self, request, pk, comment_pk, reply_pk, format=None):
-        comment = self.get_object(reply_pk)
-        if comment.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
-            comment.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_authenticated:
+            comment = self.get_object(reply_pk)
+            if comment.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
+                comment.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                    {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
         else:
-            return Response(
-                {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 #
@@ -259,8 +263,11 @@ class AnswerCommentListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, pk, comment_pk):
-        serializer = AnswerCommentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author_id_id=request.user.id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            serializer = AnswerCommentSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(author_id_id=request.user.id)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)

@@ -1,4 +1,4 @@
-from .models import GatheringPost, Comment
+from .models import GatheringPost, Comment, GatheringLike
 from .serializers import (
     PostDetailSerializer,
     PostListSerializer,
@@ -20,23 +20,29 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print(request.user.id)
-        serializer = PostListSerializer(data=request.data)
-        print(request.data)
-        if serializer.is_valid():
-            serializer.save(author_id_id=request.user.id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            print(request.user.id)
+            serializer = PostListSerializer(data=request.data)
+            print(request.data)
+            if serializer.is_valid():
+                serializer.save(author_id_id=request.user.id)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class UserPostAPIView(APIView):
     def get(self, request):
-        user_id = request.user.id
-        print(user_id)
-        posts = GatheringPost.objects.filter(author_id=user_id)
-        print(posts)
-        serializer = PostListSerializer(posts, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.user.is_authenticated:
+            user_id = request.user.id
+            print(user_id)
+            posts = GatheringPost.objects.filter(author_id=user_id)
+            print(posts)
+            serializer = PostListSerializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 # post
@@ -55,29 +61,35 @@ class PostAPIView(APIView):
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
-        post = self.get_object(pk)
-        # print(request.user.id)
-        if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
-            serializer = PostDetailSerializer(post, data=request.data)
-            if serializer.is_valid():
-                serializer.save(author_id_id=request.user.id)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+        if request.user.is_authenticated:
+            post = self.get_object(pk)
+            # print(request.user.id)
+            if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
+                serializer = PostDetailSerializer(post, data=request.data)
+                if serializer.is_valid():
+                    serializer.save(author_id_id=request.user.id)
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(
-                {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     # CRUD 중 D
     def delete(self, request, pk, format=None):
-        post = self.get_object(pk)
-        if post.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
-            post.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_authenticated:
+            post = self.get_object(pk)
+            if post.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
+                post.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                    {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
         else:
-            return Response(
-                {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class CommentAPIView(APIView):
@@ -95,29 +107,70 @@ class CommentAPIView(APIView):
 
     # CRUD 중 U
     def put(self, request, pk, comment_pk, format=None):
-        comment = self.get_object(comment_pk)
-        # print(request.user.id)
-        if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
-            serializer = CommentSerializer(comment, data=request.data)
-            if serializer.is_valid():
-                serializer.save(author_id_id=request.user.id)
-                return Response(serializer.data, status=status.HTTP_200_OK)  #
+        if request.user.is_authenticated:
+            comment = self.get_object(comment_pk)
+            # print(request.user.id)
+            if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
+                serializer = CommentSerializer(comment, data=request.data)
+                if serializer.is_valid():
+                    serializer.save(author_id_id=request.user.id)
+                    return Response(serializer.data, status=status.HTTP_200_OK)  #
+            else:
+                return Response(
+                    {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(
-                {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     # CRUD 중 D
     def delete(self, request, pk, comment_pk, format=None):
-        comment = self.get_object(comment_pk)
-        if comment.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
-            comment.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_authenticated:
+            comment = self.get_object(comment_pk)
+            if comment.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
+                comment.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response(
+                    {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+                )
         else:
-            return Response(
-                {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class LikeAPIView(APIView):
+    def post(self, request, post_id):
+        if request.user.is_authenticated:
+            user = request.user
+            post = GatheringPost.objects.get(id=post_id)  # 있는지 없는지 처리 해야함
+            print(post)
+            print(user)
+            # 이미 좋아요가 눌렸는지 확인
+            like, created = GatheringLike.objects.get_or_create(user=user, post=post)
+            if not created:
+                # 이미 좋아요가 되어있다면 제거
+                like.delete()
+                return Response(
+                    {"message": "좋아요가 취소되었습니다."}, status=status.HTTP_204_NO_CONTENT
+                )
+            else:
+                return Response({"message": "좋아요!"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class UserInterestListAPI(APIView):
+    def get(self, request):
+        if request.user.is_authenticated:
+            user = request.user
+            likes = GatheringLike.objects.filter(user=user)
+            liked_posts = GatheringPost.objects.filter(
+                id__in=likes.values_list("post", flat=True)
             )
+            serializer = PostListSerializer(liked_posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class PostViewSet(generics.ListAPIView):
@@ -134,8 +187,11 @@ class CommentListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, pk):
-        serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author_id_id=request.user.id)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            serializer = CommentSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(author_id_id=request.user.id)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)

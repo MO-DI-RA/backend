@@ -26,6 +26,15 @@ class GatheringPost(models.Model):
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
 
+class GatheringLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(GatheringPost, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "post")  # 한 사용자가 같은 게시물에 중복하여 좋아요를
+
+
 class Comment(models.Model):
     author_id = models.ForeignKey(
         User,

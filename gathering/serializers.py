@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User
-from gathering.models import GatheringPost, Comment
+from gathering.models import GatheringPost, Comment, GatheringLike
 
 
 class PostListSerializer(serializers.ModelSerializer):
@@ -69,6 +69,12 @@ class PostDetailSerializer(serializers.ModelSerializer):
             for comment in Comment.objects.filter(post_id=obj.id)
         ]
         return comments
+
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GatheringLike
+        fields = ["id", "post"]
 
 
 class CommentSerializer(serializers.ModelSerializer):
