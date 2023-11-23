@@ -16,7 +16,7 @@ class PostListSerializer(serializers.ModelSerializer):
         model = GatheringPost
         fields = [
             "id",
-            "author_id",
+            # "author_id",
             "author_profile_image",
             "author_nickname",
             "deadline",
@@ -25,6 +25,10 @@ class PostListSerializer(serializers.ModelSerializer):
             "created_at",
             "status",
             "summary",
+            "tag",
+            "method",
+            "max_people",
+            "period",
         ]
 
 
@@ -39,7 +43,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
         model = GatheringPost
         fields = [
             "id",
-            "author_id",
+            # "author_id",
             "author_nickname",
             "author_profile_image",
             "deadline",
@@ -47,13 +51,17 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "content",
             "comments",
             "status",
+            "tag",
+            "method",
+            "max_people",
+            "period",
         ]
 
     def get_comments(self, obj):
         comments = [
             {
                 "author_nickname": comment.author_id.nickname,
-                # "author_profile_image" : comment.author_id.profile_image, 보류
+                "author_profile_image": comment.author_id.profile_image,  # 보류
                 "content": comment.content,
                 "created_at": comment.created_at,
                 "updated_at": comment.updated_at,
@@ -74,7 +82,7 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "post_id",
-            "author_id",
+            # "author_id",
             "writer",
             "author_profile_image",
             "content",

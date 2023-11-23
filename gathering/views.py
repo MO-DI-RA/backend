@@ -118,23 +118,22 @@ class CommentAPIView(APIView):
             return Response(
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
-        
+
+
 class PostViewSet(generics.ListAPIView):
-        queryset = GatheringPost.objects.all()
-        serializer_class = PostDetailSerializer
-        filter_backends = [SearchFilter]
-        search_fields = ['title']
-
-
+    queryset = GatheringPost.objects.all()
+    serializer_class = PostDetailSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ["title"]
 
 
 class CommentListAPIView(APIView):  ## auther_id 도 나와야함
-    def get(self, request):  # 모든 게시물
+    def get(self, request, pk):  # 모든 게시물
         comments = Comment.objects.all()
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request):
+    def post(self, request, pk):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(author_id_id=request.user.id)

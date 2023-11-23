@@ -7,6 +7,10 @@ class GatheringPost(models.Model):
         User,
         on_delete=models.CASCADE,
     )
+    tag = models.CharField(max_length=10)
+    method = models.CharField(max_length=10)
+    max_people = models.IntegerField()
+    period = models.CharField(max_length=20)
     title = models.CharField(
         verbose_name="title",
         max_length=64,

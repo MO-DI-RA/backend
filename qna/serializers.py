@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User
-from .models import QnAPost, Answer, AnswerComment, InterestedPost
+from .models import QnAPost, Answer, AnswerComment, InterestedPost, Like
 
 
 class QnAListSerializer(serializers.ModelSerializer):
@@ -27,10 +27,16 @@ class QnAListSerializer(serializers.ModelSerializer):
         ]
 
 
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = ["id", "post"]
+
+
 class InterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = InterestedPost
-        fields = ["post"]
+        fields = ["post", "id"]
 
 
 class QnADetailSerializer(serializers.ModelSerializer):
@@ -44,7 +50,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
         model = QnAPost
         fields = [
             "id",
-            "author_id",
+            # "author_id",
             "author_nickname",
             "author_profile_image",
             "title",
@@ -56,8 +62,9 @@ class QnADetailSerializer(serializers.ModelSerializer):
     def get_answers(self, obj):
         answers = [
             {
+                "answer_id": answer.id,
                 "author_nickname": answer.author_id.nickname,
-                # "author_profile_image" : comment.author_id.profile_image, 보류,
+                # "author_profile_image": answer.author_id.profile_image,
                 "content": answer.content,
                 "created_at": answer.created_at,
                 "updated_at": answer.updated_at,
@@ -113,7 +120,7 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "answer_id",
-            "author_id",
+            # "author_id",
             "writer",
             "author_profile_image",
             "content",

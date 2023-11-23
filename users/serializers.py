@@ -6,7 +6,7 @@ from dj_rest_auth.registration.serializers import SocialLoginSerializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = ["email", "password", "profile_image", "nickname"]
 
     def create(self, validated_data):
         user = User.objects.create_user(

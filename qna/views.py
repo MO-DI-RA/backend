@@ -1,4 +1,4 @@
-from .models import QnAPost, Answer, AnswerComment, InterestedPost
+from .models import QnAPost, Answer, AnswerComment, InterestedPost, Like
 from .serializers import (
     QnADetailSerializer,
     QnAListSerializer,
@@ -12,7 +12,6 @@ from rest_framework import status
 from django.http import Http404
 from rest_framework.filters import SearchFilter
 from rest_framework import generics
-
 
 
 class ListAPIView(APIView):  ## auther_id 도 나와야함
@@ -70,11 +69,13 @@ class PostAPIView(APIView):
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
+
 class PostViewSet(generics.ListAPIView):
-        queryset = QnAPost.objects.all()
-        serializer_class = QnADetailSerializer
-        filter_backends = [SearchFilter]
-        search_fields = ['title']
+    queryset = QnAPost.objects.all()
+    serializer_class = QnADetailSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ["title"]
+
 
 class InterestedPost(APIView):
     def post(self, request, post_id):
@@ -86,6 +87,24 @@ class InterestedPost(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class LikeAPIView(APIView):
+    def post(self, request, post_id):
+        user = request.user
+        post = QnAPost.objects.get(id=post_id)
+        print(post)
+        print(user)
+        # 이미 좋아요가 눌렸는지 확인
+        like, created = Like.objects.get_or_create(user=user, post=post)
+        if not created:
+            # 이미 좋아요가 되어있다면 제거
+            like.delete()
+            return Response(
+                {"message": "좋아요가 취소되었습니다."}, status=status.HTTP_204_NO_CONTENT
+            )
+        else:
+            return Response({"message": "좋아요!"}, status=status.HTTP_201_CREATED)
+
+
 class UserPostAPIView(APIView):
     def get(self, request):
         user_id = request.user.id
@@ -95,13 +114,26 @@ class UserPostAPIView(APIView):
 
 
 class UserInterestListAPI(APIView):
-    def get(self, request):  # 모든 게시물
-        interested_posts = InterestedPost.objects.filter(user=request.user).values_list(
-            "post", flat=True
+    def get(self, request):
+        user = request.user
+        likes = Like.objects.filter(user=user)
+        liked_posts = QnAPost.objects.filter(
+            id__in=likes.values_list("post", flat=True)
         )
-        posts = QnAPost.objects.filter(id__in=interested_posts)
-        serializer = QnAListSerializer(posts, many=True)
+        serializer = QnAListSerializer(liked_posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+#     def get(self, request):  # 모든 게시물
+#         interested_posts = (
+#             InterestedPost.objects.all()
+#             .filter(user=request.user.id)
+#             .values_list("post", flat=True)
+#         )
+#
+#         posts = QnAPost.objects.filter(id__in=interested_posts)
+#         serializer = QnAListSerializer(posts, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PostToggleStatus(APIView):
@@ -131,13 +163,14 @@ class AnswerAPIView(APIView):
             raise Http404
 
     # CRUD 중 R
-    def get(self, request, pk, format=None):
+    def get(self, request, pk, comment_pk, format=None):
         comment = self.get_object(pk)
         serializer = AnswerSerializer(comment)
+        print(serializer)
         return Response(serializer.data)
 
     # CRUD 중 U
-    def put(self, request, pk, format=None):
+    def put(self, request, pk, comment_pk, format=None):
         comment = self.get_object(pk)
         # print(request.user.id)
         if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
@@ -152,8 +185,8 @@ class AnswerAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # CRUD 중 D
-    def delete(self, request, pk, format=None):
-        comment = self.get_object(pk)
+    def delete(self, request, comment_pk, format=None):
+        comment = self.get_object(comment_pk)
         if comment.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
             comment.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
