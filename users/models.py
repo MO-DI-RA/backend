@@ -44,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )  # nickname
 
     profile_image = models.ImageField(
-        upload_to=None, blank=True, null=True
+        upload_to=None, blank=True, null=True, default="media/default.jpg"
     )  # image path 정해줘야함
 
     is_active = models.BooleanField(default=True)
