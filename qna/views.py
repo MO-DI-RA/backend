@@ -9,6 +9,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
+from rest_framework.filters import SearchFilter
+from rest_framework import generics
+
 
 
 class ListAPIView(APIView):  ## auther_id 도 나와야함
@@ -66,6 +69,11 @@ class PostAPIView(APIView):
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
+class PostViewSet(generics.ListAPIView):
+        queryset = QnAPost.objects.all()
+        serializer_class = QnADetailSerializer
+        filter_backends = [SearchFilter]
+        search_fields = ['title']
 
 class PostToggleStatus(APIView):
     def get_object(self, pk):

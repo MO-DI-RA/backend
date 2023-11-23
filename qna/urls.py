@@ -16,4 +16,5 @@ urlpatterns = [
         AnswerCommentAPIView.as_view(),
     ),
     path("posts/<int:pk>/toggle/", PostToggleStatus.as_view()),
+    path("posts/search/", PostViewSet.as_view()),
 ]
