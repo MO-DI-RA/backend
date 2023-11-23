@@ -20,6 +20,16 @@ class QnAPost(models.Model):
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
 
+class InterestedPost(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="interested_posts"
+    )
+    post = models.ForeignKey(
+        QnAPost, on_delete=models.CASCADE, related_name="interested_users"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 class Answer(models.Model):
     author_id = models.ForeignKey(
         User,

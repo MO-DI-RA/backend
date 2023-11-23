@@ -1,9 +1,10 @@
-from .models import QnAPost, Answer, AnswerComment
+from .models import QnAPost, Answer, AnswerComment, InterestedPost
 from .serializers import (
     QnADetailSerializer,
     QnAListSerializer,
     AnswerSerializer,
     AnswerCommentSerializer,
+    InterestSerializer,
 )
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -21,13 +22,13 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print(request.user.id)
-        serializer = QnAListSerializer(data=request.data)
-        print(request.data)
-        if serializer.is_valid():
-            serializer.save(author_id_id=request.user.id)  # 이런식으로 바꿔줘
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            serializer = QnAListSerializer(data=request.data)
+            print(request.data)
+            if serializer.is_valid():
+                serializer.save(author_id_id=request.user.id)  # 이런식으로 바꿔줘
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # post
@@ -74,6 +75,34 @@ class PostViewSet(generics.ListAPIView):
         serializer_class = QnADetailSerializer
         filter_backends = [SearchFilter]
         search_fields = ['title']
+
+class InterestedPost(APIView):
+    def post(self, request, post_id):
+        serializer = InterestSerializer(data=request.data)
+        print(request.user.id)
+        if serializer.is_valid():
+            serializer.save(user_id=request.user.id)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserPostAPIView(APIView):
+    def get(self, request):
+        user_id = request.user.id
+        posts = QnAPost.objects.filter(author_id=user_id)
+        serializer = QnAListSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserInterestListAPI(APIView):
+    def get(self, request):  # 모든 게시물
+        interested_posts = InterestedPost.objects.filter(user=request.user).values_list(
+            "post", flat=True
+        )
+        posts = QnAPost.objects.filter(id__in=interested_posts)
+        serializer = QnAListSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class PostToggleStatus(APIView):
     def get_object(self, pk):

@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,6 +16,9 @@ SECRET_KEY = "django-insecure-gu9tmz()d(giyh$ktz@jgr6p0+xp9%w%yjunr@+mmj(^$r289h
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # Application definition

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from users.models import User
-from .models import QnAPost, Answer, AnswerComment
+from .models import QnAPost, Answer, AnswerComment, InterestedPost
 
 
 class QnAListSerializer(serializers.ModelSerializer):
@@ -25,6 +25,12 @@ class QnAListSerializer(serializers.ModelSerializer):
             "created_at",
             "status",
         ]
+
+
+class InterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InterestedPost
+        fields = ["post"]
 
 
 class QnADetailSerializer(serializers.ModelSerializer):

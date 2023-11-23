@@ -17,4 +17,7 @@ urlpatterns = [
     ),
     path("posts/<int:pk>/toggle/", PostToggleStatus.as_view()),
     path("posts/search/", PostViewSet.as_view()),
+    path("posts/<int:post_id>/interest/", InterestedPost.as_view()),
+    path("posts/interest/", UserInterestListAPI.as_view()),
+    path("posts/myposts/", UserPostAPIView.as_view()),
 ]
