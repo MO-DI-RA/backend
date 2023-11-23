@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.kakao",
+
+    "django_filters",
 ]
 
 SITE_ID = 2
@@ -83,6 +85,8 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAdminUser', # 관리자만 접근
         "rest_framework.permissions.AllowAny",  # 누구나 접근
     ),
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
