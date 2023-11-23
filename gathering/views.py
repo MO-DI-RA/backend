@@ -90,7 +90,7 @@ class CommentAPIView(APIView):
             serializer = CommentSerializer(comment, data=request.data)
             if serializer.is_valid():
                 serializer.save(author_id_id=request.user.id)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response(serializer.data, status=status.HTTP_200_OK) #
         else:
             return Response(
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
