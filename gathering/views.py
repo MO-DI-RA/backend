@@ -77,14 +77,14 @@ class CommentAPIView(APIView):
             raise Http404
 
     # CRUD 중 R
-    def get(self, request, pk, format=None):
-        comment = self.get_object(pk)
+    def get(self, request, pk, comment_pk, format=None):
+        comment = self.get_object(comment_pk)
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
 
     # CRUD 중 U
-    def put(self, request, pk, format=None):
-        comment = self.get_object(pk)
+    def put(self, request, pk, comment_pk, format=None):
+        comment = self.get_object(comment_pk)
         # print(request.user.id)
         if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
             serializer = CommentSerializer(comment, data=request.data)
@@ -98,8 +98,8 @@ class CommentAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # CRUD 중 D
-    def delete(self, request, pk, format=None):
-        comment = self.get_object(pk)
+    def delete(self, request, pk, comment_pk, format=None):
+        comment = self.get_object(comment_pk)
         if comment.author_id.id == request.user.id:  # 작성자가 같을때만 삭제 가능
             comment.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
@@ -117,12 +117,12 @@ class PostViewSet(generics.ListAPIView):
 
 
 class CommentListAPIView(APIView):  ## auther_id 도 나와야함
-    def get(self, request):  # 모든 게시물
-        comments = Comment.objects.all()
+    def get(self, request, pk):  # 모든 게시물
+        comments = Comment.objects.all().filter(post_id = pk)
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request):
+    def post(self, request, pk):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(author_id_id=request.user.id)
