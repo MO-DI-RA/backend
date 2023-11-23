@@ -188,7 +188,7 @@ class AnswerCommentAPIView(APIView):
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
-
+#
 class AnswerCommentListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request, pk, comment_pk):  # 모든 게시물
         comments = AnswerComment.objects.all()
