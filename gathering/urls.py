@@ -8,4 +8,5 @@ urlpatterns = [
     path("posts/<int:pk>", PostAPIView.as_view()),
     path("posts/<int:pk>/comments/", CommentListAPIView.as_view()),
     path("posts/<int:pk>/comments/<int:comment_pk>/", CommentAPIView.as_view()),
+    path("posts/myposts/", UserPostAPIView.as_view()),
 ]

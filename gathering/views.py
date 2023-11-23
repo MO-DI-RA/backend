@@ -26,6 +26,16 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserPostAPIView(APIView):
+    def get(self, request):
+        user_id = request.user.id
+        print(user_id)
+        posts = GatheringPost.objects.filter(author_id=user_id)
+        print(posts)
+        serializer = PostListSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 # post
 class PostAPIView(APIView):
     def get_object(self, pk):
@@ -66,6 +76,7 @@ class PostAPIView(APIView):
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
+
 class CommentAPIView(APIView):
     def get_object(self, pk):
         try:
@@ -104,6 +115,7 @@ class CommentAPIView(APIView):
             return Response(
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
+
 
 class CommentListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request):  # 모든 게시물

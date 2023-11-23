@@ -19,10 +19,12 @@ class PostListSerializer(serializers.ModelSerializer):
             "author_id",
             "author_profile_image",
             "author_nickname",
+            "deadline",
             "title",
             "content",
             "created_at",
             "status",
+            "summary",
         ]
 
 
@@ -40,6 +42,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "author_id",
             "author_nickname",
             "author_profile_image",
+            "deadline",
             "title",
             "content",
             "comments",
