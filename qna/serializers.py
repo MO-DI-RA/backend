@@ -73,7 +73,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "qna_id",
-            "author_id",
+            # "author_id",
             "writer",
             "author_profile_image",
             "content",

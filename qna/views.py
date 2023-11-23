@@ -78,7 +78,7 @@ class PostToggleStatus(APIView):
         post = self.get_object(pk)
         if post.author_id.id == request.user.id:
             post.status = not post.status
-            post.save(author_id_id=request.user.id)
+            post.save()
             return Response({"message": "게시물 상태가 토글되었습니다."}, status=status.HTTP_200_OK)
         else:
             return Response(
