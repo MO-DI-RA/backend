@@ -22,6 +22,7 @@ class PostListSerializer(serializers.ModelSerializer):
             "title",
             "content",
             "created_at",
+            "status",
         ]
 
 
@@ -42,12 +43,14 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "title",
             "content",
             "comments",
+            "status",
         ]
 
     def get_comments(self, obj):
         comments = [
             {
-                "user": User.objects.get(id=comment.author_id).nickname,
+                "author_nickname": comment.author_id.nickname,
+                # "author_profile_image" : comment.author_id.profile_image, 보류
                 "content": comment.content,
                 "created_at": comment.created_at,
                 "updated_at": comment.updated_at,
@@ -59,7 +62,19 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     writer = serializers.ReadOnlyField(source="author_id.nickname")
+    author_profile_image = serializers.ImageField(
+        source="author_id.profile_image", read_only=True
+    )
 
     class Meta:
         model = Comment
-        fields = ["id", "writer", "content", "create_at", "updated_at"]
+        fields = [
+            "id",
+            "post_id",
+            "author_id",
+            "writer",
+            "author_profile_image",
+            "content",
+            "created_at",
+            "updated_at",
+        ]
