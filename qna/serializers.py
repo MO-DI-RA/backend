@@ -56,7 +56,6 @@ class QnADetailSerializer(serializers.ModelSerializer):
                 "created_at": answer.created_at,
                 "updated_at": answer.updated_at,
             }
-
             for answer in Answer.objects.filter(qna_id=obj.id)
         ]
         return answers
