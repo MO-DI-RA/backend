@@ -9,6 +9,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 
+from rest_framework import generics
+from rest_framework.filters import SearchFilter
+
 
 class ListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request):  # 모든 게시물
@@ -24,6 +27,16 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
             serializer.save(author_id_id=request.user.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserPostAPIView(APIView):
+    def get(self, request):
+        user_id = request.user.id
+        print(user_id)
+        posts = GatheringPost.objects.filter(author_id=user_id)
+        print(posts)
+        serializer = PostListSerializer(posts, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # post
@@ -66,6 +79,7 @@ class PostAPIView(APIView):
                 {"message": "자신의 게시물이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
 
+
 class CommentAPIView(APIView):
     def get_object(self, pk):
         try:
@@ -104,6 +118,15 @@ class CommentAPIView(APIView):
             return Response(
                 {"message": "자신의 댓글이 아닙니다."}, status=status.HTTP_403_FORBIDDEN
             )
+        
+class PostViewSet(generics.ListAPIView):
+        queryset = GatheringPost.objects.all()
+        serializer_class = PostDetailSerializer
+        filter_backends = [SearchFilter]
+        search_fields = ['title']
+
+
+
 
 class CommentListAPIView(APIView):  ## auther_id 도 나와야함
     def get(self, request):  # 모든 게시물
