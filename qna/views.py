@@ -47,7 +47,7 @@ class PostAPIView(APIView):
         if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
             serializer = QnADetailSerializer(post, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(author_id_id=request.user.id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
@@ -78,7 +78,7 @@ class PostToggleStatus(APIView):
         post = self.get_object(pk)
         if post.author_id.id == request.user.id:
             post.status = not post.status
-            post.save()
+            post.save(author_id_id=request.user.id)
             return Response({"message": "게시물 상태가 토글되었습니다."}, status=status.HTTP_200_OK)
         else:
             return Response(
@@ -106,7 +106,7 @@ class AnswerAPIView(APIView):
         if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
             serializer = AnswerSerializer(comment, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(author_id_id=request.user.id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
@@ -135,7 +135,7 @@ class AnswerListAPIView(APIView):  ## auther_id 도 나와야함
     def post(self, request, pk):
         serializer = AnswerSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(author_id_id=request.user.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -160,7 +160,7 @@ class AnswerCommentAPIView(APIView):
         if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
             serializer = AnswerCommentSerializer(comment, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(author_id_id=request.user.id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
@@ -190,6 +190,6 @@ class AnswerCommentListAPIView(APIView):  ## auther_id 도 나와야함
     def post(self, request, pk, comment_pk):
         serializer = AnswerCommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(author_id_id=request.user.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

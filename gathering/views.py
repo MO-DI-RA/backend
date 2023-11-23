@@ -17,9 +17,11 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        print(request.user.id)
         serializer = PostListSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(author_id_id=request.user.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -36,7 +38,7 @@ class PostAPIView(APIView):
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
         serializer = PostDetailSerializer(post)
-        return Response(serializer.data)
+        return Response(data=serializer.data)
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
@@ -45,7 +47,7 @@ class PostAPIView(APIView):
         if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
             serializer = PostDetailSerializer(post, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(author_id_id=request.user.id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
@@ -84,7 +86,7 @@ class CommentAPIView(APIView):
         if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
             serializer = CommentSerializer(comment, data=request.data)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(author_id_id=request.user.id)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(
@@ -112,6 +114,6 @@ class CommentListAPIView(APIView):  ## auther_id 도 나와야함
     def post(self, request):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(author_id_id=request.user.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
