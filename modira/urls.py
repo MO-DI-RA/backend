@@ -21,14 +21,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("user/", include("users.urls")),
-<<<<<<< HEAD
-    path("gathering/", include("gathering.urls")),
-    path("qna/", include("qna.urls"))
-]
-=======
     path("api/user/", include("allauth.urls")),
     path("gathering/", include("gathering.urls")),
     path("qna/", include("qna.urls")),
     # path("accounts/", include("allauth.urls"), name="socialaccount_signup"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> develop

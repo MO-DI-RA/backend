@@ -48,11 +48,8 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.kakao",
-<<<<<<< HEAD
-=======
 
     "django_filters",
->>>>>>> develop
 ]
 
 SITE_ID = 2
@@ -63,11 +60,7 @@ AUTH_USER_MODEL = "users.User"
 #     "SOCIAL_LOGIN_SERIALIZER": "users.serializers.KaKaoSocialSerializer"
 # }
 
-<<<<<<< HEAD
-SOCIALACCOUNT_ADAPTER = "users.adapter.CustomSocialAccountAdapter"
-=======
 SOCIALACCOUNT_ADAPTER = "users.adapter.KakaoSocialAccountAdapter"
->>>>>>> develop
 
 REST_AUTH = {
     "USE_JWT": True,
@@ -92,11 +85,8 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAdminUser', # 관리자만 접근
         "rest_framework.permissions.AllowAny",  # 누구나 접근
     ),
-<<<<<<< HEAD
-=======
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     
->>>>>>> develop
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
