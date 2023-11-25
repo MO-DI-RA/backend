@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import timedelta
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,6 +16,9 @@ SECRET_KEY = "django-insecure-gu9tmz()d(giyh$ktz@jgr6p0+xp9%w%yjunr@+mmj(^$r289h
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
 # Application definition
@@ -44,6 +48,11 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.kakao",
+<<<<<<< HEAD
+=======
+
+    "django_filters",
+>>>>>>> develop
 ]
 
 SITE_ID = 2
@@ -54,7 +63,11 @@ AUTH_USER_MODEL = "users.User"
 #     "SOCIAL_LOGIN_SERIALIZER": "users.serializers.KaKaoSocialSerializer"
 # }
 
+<<<<<<< HEAD
 SOCIALACCOUNT_ADAPTER = "users.adapter.CustomSocialAccountAdapter"
+=======
+SOCIALACCOUNT_ADAPTER = "users.adapter.KakaoSocialAccountAdapter"
+>>>>>>> develop
 
 REST_AUTH = {
     "USE_JWT": True,
@@ -79,6 +92,11 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAdminUser', # 관리자만 접근
         "rest_framework.permissions.AllowAny",  # 누구나 접근
     ),
+<<<<<<< HEAD
+=======
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    
+>>>>>>> develop
 }
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
@@ -121,7 +139,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [  # 사용하는 URL을 허용
-    "http://localhost:3000",  # React를 기본으로 npm run start 했을때 사용하는 URL
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+    # React를 기본으로 npm run start 했을때 사용하는 URL
 ]
 
 ROOT_URLCONF = "modira.urls"

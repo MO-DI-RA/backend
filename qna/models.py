@@ -15,18 +15,49 @@ class QnAPost(models.Model):
         verbose_name="content",
         max_length=2000,
     )
+<<<<<<< HEAD
     status = models.BooleanField(verbose_name="status", default= False)
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
+=======
+    status = models.BooleanField(verbose_name="status", default=False)
+    created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
+    updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
+
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(QnAPost, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "post")  # 한 사용자가 같은 게시물에 중복하여 좋아요를
+
+
+class InterestedPost(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="interested_posts"
+    )
+    post = models.ForeignKey(
+        QnAPost, on_delete=models.CASCADE, related_name="interested_users"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+>>>>>>> develop
 class Answer(models.Model):
     author_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
     )
+<<<<<<< HEAD
     qna_id = models.ForeignKey(
         QnAPost, verbose_name="qnas", on_delete=models.CASCADE
     )
+=======
+    qna_id = models.ForeignKey(QnAPost, verbose_name="qnas", on_delete=models.CASCADE)
+>>>>>>> develop
     content = models.CharField(
         verbose_name="answer",
         max_length=300,
@@ -34,6 +65,10 @@ class Answer(models.Model):
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 class AnswerComment(models.Model):
     author_id = models.ForeignKey(
         User,
@@ -47,4 +82,8 @@ class AnswerComment(models.Model):
         max_length=300,
     )
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
+<<<<<<< HEAD
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
+=======
+    updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
+>>>>>>> develop

@@ -1,4 +1,6 @@
 from django.db import models
+
+# from qna.models import QnAPost
 from django.contrib.auth.models import (
     BaseUserManager,
     AbstractBaseUser,
@@ -44,7 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )  # nickname
 
     profile_image = models.ImageField(
-        upload_to=None, blank=True, null=True
+        upload_to=None, blank=True, null=True, default="media/default.jpg"
     )  # image path 정해줘야함
 
     is_active = models.BooleanField(default=True)
@@ -60,3 +62,5 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = [  # USERNAME_FIELD, Password는 항상 기본적으로 요구 따로 명시 x
         "nickname",
     ]
+
+    qna_interests = models.ManyToManyField("qna.QnAPost", verbose_name="")
