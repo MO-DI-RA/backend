@@ -10,7 +10,7 @@ from rest_framework import status
 from django.http import Http404
 
 from rest_framework import generics
-from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 class ListAPIView(APIView):  ## auther_id 도 나와야함
@@ -21,9 +21,10 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
 
     def post(self, request):
         if request.user.is_authenticated:
-            print(request.user.id)
+            # print(request.data)
+            # print(request.user.id)
             serializer = PostListSerializer(data=request.data)
-            print(request.data)
+
             if serializer.is_valid():
                 serializer.save(author_id_id=request.user.id)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -36,9 +37,9 @@ class UserPostAPIView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             user_id = request.user.id
-            print(user_id)
+            # print(user_id)
             posts = GatheringPost.objects.filter(author_id=user_id)
-            print(posts)
+            # print(posts)
             serializer = PostListSerializer(posts, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -55,9 +56,41 @@ class PostAPIView(APIView):
 
     # CRUD 중 R
     def get(self, request, pk, format=None):
-        post = self.get_object(pk)
-        serializer = PostDetailSerializer(post)
-        return Response(data=serializer.data)
+        if not request.user.is_authenticated:
+            post = self.get_object(pk)
+            serializer = PostDetailSerializer(post)
+            data = serializer.data
+            data["like_status"] = False
+            return Response(data=data)
+        else:
+            like = GatheringLike.objects.filter(post=pk, user=request.user.id)
+            if like:
+                post = self.get_object(pk)
+                serializer = PostDetailSerializer(post)
+                data = serializer.data
+                data["like_status"] = True
+                return Response(data=data)
+            else:
+                post = self.get_object(pk)
+                serializer = PostDetailSerializer(post)
+                data = serializer.data
+                data["like_status"] = False
+                return Response(data=data)
+
+    # class LikeStatusView(APIView):
+
+    # def get(self, request, post_id):
+    #     print(request.user)
+    #     if request.user.is_authenticated:
+    #         like = GatheringLike.objects.filter(post=post_id, user=request.user.id)
+    #         if like:
+    #             return Response(data=True)
+    #         else:
+    #             print("-------------", like)
+    #             return Response(data=False)
+    #     else:
+    #         print("tlqkf")
+    #         return Response(data=False)
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
@@ -143,18 +176,25 @@ class LikeAPIView(APIView):
         if request.user.is_authenticated:
             user = request.user
             post = GatheringPost.objects.get(id=post_id)  # 있는지 없는지 처리 해야함
-            print(post)
-            print(user)
+            # print(post)
+
+            # print(user)
             # 이미 좋아요가 눌렸는지 확인
             like, created = GatheringLike.objects.get_or_create(user=user, post=post)
-            if not created:
-                # 이미 좋아요가 되어있다면 제거
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class LikeDeleteView(APIView):
+    def delete(self, request):
+        if request.user.is_authenticated:
+            likes_id = request.data
+            # print(likes_id)
+            for id in likes_id:
+                like = GatheringLike.objects.get(post=id)
                 like.delete()
-                return Response(
-                    {"message": "좋아요가 취소되었습니다."}, status=status.HTTP_204_NO_CONTENT
-                )
-            else:
-                return Response({"message": "좋아요!"}, status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
@@ -170,14 +210,14 @@ class UserInterestListAPI(APIView):
             serializer = PostListSerializer(liked_posts, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class PostViewSet(generics.ListAPIView):
+class PostViewSet(generics.ListAPIView):  # Search by title
     queryset = GatheringPost.objects.all()
     serializer_class = PostDetailSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ["title"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["title", "tag", "status"]
 
 
 class CommentListAPIView(APIView):  ## auther_id 도 나와야함
@@ -189,8 +229,9 @@ class CommentListAPIView(APIView):  ## auther_id 도 나와야함
     def post(self, request, pk):
         if request.user.is_authenticated:
             serializer = CommentSerializer(data=request.data)
+            # print(request.data)
             if serializer.is_valid():
-                serializer.save(author_id_id=request.user.id)
+                serializer.save(author_id_id=request.user.id, post_id_id=pk)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:

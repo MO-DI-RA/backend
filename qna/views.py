@@ -9,7 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from rest_framework.filters import SearchFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 
 
@@ -40,9 +40,26 @@ class PostAPIView(APIView):
 
     # CRUD 중 R
     def get(self, request, pk, format=None):
-        post = self.get_object(pk)
-        serializer = QnADetailSerializer(post)
-        return Response(data=serializer.data)
+        if not request.user.is_authenticated:
+            post = self.get_object(pk)
+            serializer = QnADetailSerializer(post)
+            data = serializer.data
+            data["like_status"] = False
+            return Response(data=data)
+        else:
+            like = Like.objects.filter(post=pk, user=request.user.id)
+            if like:
+                post = self.get_object(pk)
+                serializer = QnADetailSerializer(post)
+                data = serializer.data
+                data["like_status"] = True
+                return Response(data=data)
+            else:
+                post = self.get_object(pk)
+                serializer = QnADetailSerializer(post)
+                data = serializer.data
+                data["like_status"] = False
+                return Response(data=data)
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
@@ -76,11 +93,11 @@ class PostAPIView(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class PostViewSet(generics.ListAPIView):
+class PostViewSet(generics.ListAPIView):  # Search by title
     queryset = QnAPost.objects.all()
     serializer_class = QnADetailSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ["title"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["title"]
 
 
 class LikeAPIView(APIView):
@@ -102,6 +119,34 @@ class LikeAPIView(APIView):
                 return Response({"message": "좋아요!"}, status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class LikeDeleteView(APIView):
+    def delete(self, request):
+        if request.user.is_authenticated:
+            likes_id = request.data
+            print(likes_id)
+            for id in likes_id:
+                like = Like.objects.get(post=id)
+                like.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class LikeStatusView(APIView):
+    def get(self, request, post_id):
+        print(request.user)
+        if request.user.is_authenticated:
+            like = Like.objects.filter(post=post_id, user=request.user.id)
+            if like:
+                return Response(data=True)
+            else:
+                # print("-------------", like)
+                return Response(data=False)
+        else:
+            # print("tlqkf")
+            return Response(data=False)
 
 
 class UserPostAPIView(APIView):

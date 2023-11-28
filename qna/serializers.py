@@ -12,6 +12,7 @@ class QnAListSerializer(serializers.ModelSerializer):
     )
     # print(author_profile_image)
     # auther_id = serializers.IntegerField(source="author_id", read_only=True)
+    # author_id = serializers.PrimaryKeyRelatedField(read_only=True)  # 이거 여기 저기 추가 해줘야함
 
     class Meta:
         model = QnAPost
@@ -21,6 +22,7 @@ class QnAListSerializer(serializers.ModelSerializer):
             "author_profile_image",
             "author_nickname",
             "title",
+            "summary",
             "content",
             "created_at",
             "status",
@@ -45,12 +47,13 @@ class QnADetailSerializer(serializers.ModelSerializer):
         source="author_id.profile_image", read_only=True
     )
     answers = serializers.SerializerMethodField()
+    author_id = serializers.PrimaryKeyRelatedField(read_only=True)  # 이거 여기 저기 추가 해줘야함
 
     class Meta:
         model = QnAPost
         fields = [
             "id",
-            # "author_id",
+            "author_id",
             "author_nickname",
             "author_profile_image",
             "title",
@@ -80,13 +83,14 @@ class AnswerSerializer(serializers.ModelSerializer):
         source="author_id.profile_image", read_only=True
     )
     answercomments = serializers.SerializerMethodField()
+    author_id = serializers.PrimaryKeyRelatedField(read_only=True)  # 이거 여기 저기 추가 해줘야함
 
     class Meta:
         model = Answer
         fields = [
             "id",
             "qna_id",
-            # "author_id",
+            "author_id",
             "writer",
             "author_profile_image",
             "content",
@@ -99,7 +103,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         comments = [
             {
                 "author_nickname": AnswerComment.author_id.nickname,
-                # "author_profile_image" : AnswerComment.author_id.profile_image,
+                # "author_profile_image": AnswerComment.author_id.profile_image,
                 "content": AnswerComment.content,
                 "created_at": AnswerComment.created_at,
                 "updated_at": AnswerComment.updated_at,
@@ -114,6 +118,7 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True
     )
+    author_id = serializers.PrimaryKeyRelatedField(read_only=True)  # 이거 여기 저기 추가 해줘야함
 
     #
     class Meta:
@@ -121,13 +126,10 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "answer_id",
-            # "author_id",
+            "author_id",
             "writer",
             "author_profile_image",
             "content",
             "created_at",
             "updated_at",
         ]
-
-
-#
