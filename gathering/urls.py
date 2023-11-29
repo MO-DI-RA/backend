@@ -13,5 +13,6 @@ urlpatterns = [
     path("posts/<int:post_id>/like/", LikeAPIView.as_view()),
     path("posts/unlike/", LikeDeleteView.as_view()),
     path("posts/interest/", UserInterestListAPI.as_view()),
+    path("posts/<int:pk>/toggle/", PostToggleStatus.as_view()),
     # path("posts/<int:post_id>/status/", LikeStatusView.as_view()),
 ]
