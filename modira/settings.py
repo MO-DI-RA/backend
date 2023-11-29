@@ -55,9 +55,9 @@ SITE_ID = 2
 
 AUTH_USER_MODEL = "users.User"
 
-# REST_AUTH_SERIALIZERS = {
-#     "SOCIAL_LOGIN_SERIALIZER": "users.serializers.KaKaoSocialSerializer"
-# }
+REST_AUTH_SERIALIZERS = {
+    "SOCIAL_LOGIN_SERIALIZER": "users.serializers.KaKaoSocialSerializer"
+}
 
 SOCIALACCOUNT_ADAPTER = "users.adapter.KakaoSocialAccountAdapter"
 

@@ -181,6 +181,7 @@ class PostToggleStatus(APIView):
 
     def put(self, request, pk, format=None):
         if request.user.is_authenticated:
+            # print(request.data)
             post = self.get_object(pk)
             if post.author_id.id == request.user.id:
                 post.status = not post.status

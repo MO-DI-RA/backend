@@ -7,8 +7,5 @@ class KakaoSocialAccountAdapter(DefaultSocialAccountAdapter):
         oauth_data = sociallogin.account.extra_data.get("kakao_account").get("profile")
         # print("-----------------------------------", oauth_data)
         user.nickname = oauth_data.get("nickname")
-        user.profile_image = oauth_data.get(
-            "profile_image_url"
-        )  # 뭔가 이상하게 url이 파싱됨 이미지는 저장 안해도 될지도
         user.save()
         return user
