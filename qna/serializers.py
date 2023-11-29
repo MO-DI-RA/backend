@@ -82,7 +82,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True
     )
-    answercomments = serializers.SerializerMethodField()
+    # answercomments = serializers.SerializerMethodField()
     author_id = serializers.PrimaryKeyRelatedField(read_only=True)  # 이거 여기 저기 추가 해줘야함
 
     class Meta:
@@ -94,23 +94,23 @@ class AnswerSerializer(serializers.ModelSerializer):
             "writer",
             "author_profile_image",
             "content",
-            "answercomments",
+            # "answercomments",
             "created_at",
             "updated_at",
         ]
 
-    def get_answercomments(self, obj):
-        comments = [
-            {
-                "author_nickname": AnswerComment.author_id.nickname,
-                # "author_profile_image": AnswerComment.author_id.profile_image,
-                "content": AnswerComment.content,
-                "created_at": AnswerComment.created_at,
-                "updated_at": AnswerComment.updated_at,
-            }
-            for AnswerComment in AnswerComment.objects.filter(answer_id=obj.id)
-        ]
-        return comments
+    # def get_answercomments(self, obj):
+    #     comments = [
+    #         {
+    #             "author_nickname": AnswerComment.author_id.nickname,
+    #             # "author_profile_image": AnswerComment.author_id.profile_image,
+    #             "content": AnswerComment.content,
+    #             "created_at": AnswerComment.created_at,
+    #             "updated_at": AnswerComment.updated_at,
+    #         }
+    #         for AnswerComment in AnswerComment.objects.filter(answer_id=obj.id)
+    #     ]
+    #     return comments
 
 
 class AnswerCommentSerializer(serializers.ModelSerializer):
@@ -125,7 +125,7 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
         model = AnswerComment
         fields = [
             "id",
-            "answer_id",
+            # "answer_id",
             "author_id",
             "writer",
             "author_profile_image",
