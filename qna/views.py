@@ -130,7 +130,7 @@ class LikeDeleteView(APIView):
             for id in likes_id:
                 like = Like.objects.get(post=id)
                 like.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 

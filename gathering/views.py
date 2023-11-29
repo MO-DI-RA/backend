@@ -222,11 +222,12 @@ class LikeDeleteView(APIView):
     def delete(self, request):
         if request.user.is_authenticated:
             likes_id = request.data
+            print(likes_id)
             # print(likes_id)
             for id in likes_id:
                 like = GatheringLike.objects.get(post=id)
                 like.delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
