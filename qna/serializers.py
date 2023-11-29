@@ -8,7 +8,7 @@ class QnAListSerializer(serializers.ModelSerializer):
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
 
     author_profile_image = serializers.ImageField(
-        source="author_id.profile_image", read_only=True
+        source="author_id.profile_image", read_only=True, use_url=False
     )
     # print(author_profile_image)
     # auther_id = serializers.IntegerField(source="author_id", read_only=True)
