@@ -4,6 +4,8 @@ from .serializers import (
     PostListSerializer,
     CommentSerializer,
 )
+from .filters import PostFilter
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -217,7 +219,7 @@ class PostViewSet(generics.ListAPIView):  # Search by title
     queryset = GatheringPost.objects.all()
     serializer_class = PostDetailSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["title", "tag", "status"]
+    filterset_class = PostFilter
 
 
 class CommentListAPIView(APIView):  ## auther_id 도 나와야함

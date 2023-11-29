@@ -125,7 +125,6 @@ class AnswerCommentSerializer(serializers.ModelSerializer):
         model = AnswerComment
         fields = [
             "id",
-            # "answer_id",
             "author_id",
             "writer",
             "author_profile_image",

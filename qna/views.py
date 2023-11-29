@@ -5,6 +5,7 @@ from .serializers import (
     AnswerSerializer,
     AnswerCommentSerializer,
 )
+from .filters import PostFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -97,7 +98,7 @@ class PostViewSet(generics.ListAPIView):  # Search by title
     queryset = QnAPost.objects.all()
     serializer_class = QnADetailSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["title"]
+    filterset_class = PostFilter
 
 
 class LikeAPIView(APIView):
