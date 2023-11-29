@@ -84,6 +84,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     )
     # answercomments = serializers.SerializerMethodField()
     author_id = serializers.PrimaryKeyRelatedField(read_only=True)  # 이거 여기 저기 추가 해줘야함
+    qna_id = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Answer

@@ -247,7 +247,7 @@ class AnswerListAPIView(APIView):  ## auther_id 도 나와야함
         if request.user.is_authenticated:
             serializer = AnswerSerializer(data=request.data)
             if serializer.is_valid():
-                serializer.save(author_id_id=request.user.id)
+                serializer.save(author_id_id=request.user.id, qna_id_id=pk)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
