@@ -54,6 +54,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "division",
             "content",
             "contact",
+            "summary",
             "comments",
             "status",
             "tag",
