@@ -21,7 +21,7 @@ class GatheringPost(models.Model):
     tag = models.CharField(max_length=10)
     method = models.CharField(max_length=10)
     max_people = models.IntegerField()
-    period = models.CharField(max_length=20)
+    period = models.IntegerField()
     summary = models.CharField(verbose_name="summary", max_length=50)
     status = models.BooleanField(verbose_name="status", default=False)
     deadline = models.DateTimeField(verbose_name="deadline", null=False)

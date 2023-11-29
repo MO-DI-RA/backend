@@ -58,13 +58,16 @@ class PostAPIView(APIView):
 
     # CRUD 중 R
     def get(self, request, pk, format=None):
+        print(request.user.is_authenticated)
         if not request.user.is_authenticated:
+            print("인증 실패")
             post = self.get_object(pk)
             serializer = PostDetailSerializer(post)
             data = serializer.data
             data["like_status"] = False
-            return Response(data=data)
+            return Response(status=status.HTTP_200_OK, data=data)
         else:
+            print("tlqkf")
             like = GatheringLike.objects.filter(post=pk, user=request.user.id)
             if like:
                 post = self.get_object(pk)
@@ -220,7 +223,7 @@ class UserInterestListAPI(APIView):
 
 class PostViewSet(generics.ListAPIView):  # Search by title
     queryset = GatheringPost.objects.all()
-    serializer_class = PostDetailSerializer
+    serializer_class = PostListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = PostFilter
 
