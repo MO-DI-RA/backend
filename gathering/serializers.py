@@ -8,7 +8,7 @@ class PostListSerializer(serializers.ModelSerializer):
     author_nickname = serializers.ReadOnlyField(source="author_id.nickname")
 
     author_profile_image = serializers.ImageField(
-        source="author_id.profile_image", read_only=False, use_url=False
+        source="author_id.profile_image", read_only=True, use_url=False
     )
     # print(author_profile_image)
 
