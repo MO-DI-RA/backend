@@ -59,6 +59,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
             "title",
             "content",
             "answers",
+            "summary",
             "status",
         ]
 
