@@ -178,11 +178,14 @@ class LikeAPIView(APIView):
         if request.user.is_authenticated:
             user = request.user
             post = GatheringPost.objects.get(id=post_id)  # 있는지 없는지 처리 해야함
-            # print(post)
-
-            # print(user)
             # 이미 좋아요가 눌렸는지 확인
             like, created = GatheringLike.objects.get_or_create(user=user, post=post)
+            if not created:
+                # 이미 좋아요가 되어있다면 제거
+                like.delete()
+                return Response(
+                    {"message": "좋아요가 취소되었습니다."}, status=status.HTTP_204_NO_CONTENT
+                )
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)

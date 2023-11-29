@@ -46,7 +46,7 @@ class PostAPIView(APIView):
             serializer = QnADetailSerializer(post)
             data = serializer.data
             data["like_status"] = False
-            return Response(data=data)
+            return Response(data=data, status=status.HTTP_200_OK)
         else:
             like = Like.objects.filter(post=pk, user=request.user.id)
             if like:
@@ -54,13 +54,13 @@ class PostAPIView(APIView):
                 serializer = QnADetailSerializer(post)
                 data = serializer.data
                 data["like_status"] = True
-                return Response(data=data)
+                return Response(data=data, status=status.HTTP_200_OK)
             else:
                 post = self.get_object(pk)
                 serializer = QnADetailSerializer(post)
                 data = serializer.data
                 data["like_status"] = False
-                return Response(data=data)
+                return Response(data=data, status=status.HTTP_200_OK)
 
     # CRUD 중 U
     def put(self, request, pk, format=None):

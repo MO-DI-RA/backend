@@ -51,6 +51,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
             "author_profile_image",
             "deadline",
             "title",
+            "division",
             "content",
             "contact",
             "comments",
