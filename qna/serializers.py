@@ -22,7 +22,7 @@ class QnAListSerializer(serializers.ModelSerializer):
             "author_profile_image",
             "author_nickname",
             "title",
-            "summary",
+            # "summary",
             "content",
             "created_at",
             "status",
