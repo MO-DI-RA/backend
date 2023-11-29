@@ -96,7 +96,7 @@ class PostAPIView(APIView):
 
 class PostViewSet(generics.ListAPIView):  # Search by title
     queryset = QnAPost.objects.all()
-    serializer_class = QnADetailSerializer
+    serializer_class = QnAListSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_class = PostFilter
 
