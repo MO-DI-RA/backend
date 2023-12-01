@@ -58,44 +58,19 @@ class PostAPIView(APIView):
 
     # CRUD 중 R
     def get(self, request, pk, format=None):
-        print(request.user.is_authenticated)
-        if not request.user.is_authenticated:
-            print("인증 실패")
-            post = self.get_object(pk)
-            serializer = PostDetailSerializer(post)
-            data = serializer.data
-            data["like_status"] = False
-            return Response(status=status.HTTP_200_OK, data=data)
-        else:
-            print("tlqkf")
-            like = GatheringLike.objects.filter(post=pk, user=request.user.id)
+        request_user = request.GET["user_id"]
+        post = self.get_object(pk)
+        serializer = PostDetailSerializer(post)
+        data = serializer.data
+        if request_user:  # user 가 있으면
+            like = GatheringLike.objects.filter(post=pk, user=request_user)
             if like:
-                post = self.get_object(pk)
-                serializer = PostDetailSerializer(post)
-                data = serializer.data
                 data["like_status"] = True
-                return Response(data=data)
             else:
-                post = self.get_object(pk)
-                serializer = PostDetailSerializer(post)
-                data = serializer.data
                 data["like_status"] = False
-                return Response(data=data)
-
-    # class LikeStatusView(APIView):
-
-    # def get(self, request, post_id):
-    #     print(request.user)
-    #     if request.user.is_authenticated:
-    #         like = GatheringLike.objects.filter(post=post_id, user=request.user.id)
-    #         if like:
-    #             return Response(data=True)
-    #         else:
-    #             print("-------------", like)
-    #             return Response(data=False)
-    #     else:
-    #         print("tlqkf")
-    #         return Response(data=False)
+        else:  # 로그인이 아니면
+            data["like_status"] = False
+        return Response(data=data, status=status.HTTP_200_OK)
 
     # CRUD 중 U
     def put(self, request, pk, format=None):

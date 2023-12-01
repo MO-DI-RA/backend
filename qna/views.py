@@ -41,26 +41,19 @@ class PostAPIView(APIView):
 
     # CRUD 중 R
     def get(self, request, pk, format=None):
-        if not request.user.is_authenticated:
-            post = self.get_object(pk)
-            serializer = QnADetailSerializer(post)
-            data = serializer.data
-            data["like_status"] = False
-            return Response(data=data, status=status.HTTP_200_OK)
-        else:
-            like = Like.objects.filter(post=pk, user=request.user.id)
+        request_user = request.GET["user_id"]
+        post = self.get_object(pk)
+        serializer = QnADetailSerializer(post)
+        data = serializer.data
+        if request_user:  # 로그인이 되어 있으면
+            like = Like.objects.filter(post=pk, user=request_user)
             if like:
-                post = self.get_object(pk)
-                serializer = QnADetailSerializer(post)
-                data = serializer.data
                 data["like_status"] = True
-                return Response(data=data, status=status.HTTP_200_OK)
             else:
-                post = self.get_object(pk)
-                serializer = QnADetailSerializer(post)
-                data = serializer.data
                 data["like_status"] = False
-                return Response(data=data, status=status.HTTP_200_OK)
+        else:  # 로그인이 아니면
+            data["like_status"] = False
+        return Response(data=data, status=status.HTTP_200_OK)
 
     # CRUD 중 U
     def put(self, request, pk, format=None):
