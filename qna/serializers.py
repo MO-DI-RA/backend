@@ -60,6 +60,7 @@ class QnADetailSerializer(serializers.ModelSerializer):
             "content",
             "answers",
             "status",
+            "created_at",
         ]
 
     def get_answers(self, obj):
