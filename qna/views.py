@@ -103,8 +103,8 @@ class LikeAPIView(APIView):
         if request.user.is_authenticated:
             user = request.user
             post = QnAPost.objects.get(id=post_id)  # 있는지 없는지 처리 해야함
-            print(post)
-            print(user)
+            # print(post)
+            # print(user)
             # 이미 좋아요가 눌렸는지 확인
             like, created = Like.objects.get_or_create(user=user, post=post)
             if not created:
@@ -123,7 +123,7 @@ class LikeDeleteView(APIView):
     def delete(self, request):
         if request.user.is_authenticated:
             likes_id = request.data
-            print(likes_id)
+            # print(likes_id)
             for id in likes_id:
                 like = Like.objects.get(post=id)
                 like.delete()
@@ -134,7 +134,7 @@ class LikeDeleteView(APIView):
 
 class LikeStatusView(APIView):
     def get(self, request, post_id):
-        print(request.user)
+        # print(request.user)
         if request.user.is_authenticated:
             like = Like.objects.filter(post=post_id, user=request.user.id)
             if like:
@@ -205,7 +205,7 @@ class AnswerAPIView(APIView):
     def get(self, request, pk, comment_pk, format=None):
         comment = self.get_object(comment_pk)
         serializer = AnswerSerializer(comment)
-        print(serializer)
+        # print(serializer)
         return Response(serializer.data)
 
     # CRUD 중 U
@@ -308,7 +308,7 @@ class AnswerCommentListAPIView(APIView):  ## auther_id 도 나와야함
 
     def post(self, request, pk, comment_pk):
         if request.user.is_authenticated:
-            print(request)
+            # print(request)
             serializer = AnswerCommentSerializer(data=request.data)
             if serializer.is_valid():
                 serializer.save(author_id_id=request.user.id, answer_id_id=comment_pk)

@@ -10,13 +10,11 @@ class PostListSerializer(serializers.ModelSerializer):
     author_profile_image = serializers.ImageField(
         source="author_id.profile_image", read_only=True, use_url=False
     )
-    # print(author_profile_image)
 
     class Meta:
         model = GatheringPost
         fields = [
             "id",
-            # "author_id",
             "contact",
             "division",
             "author_profile_image",

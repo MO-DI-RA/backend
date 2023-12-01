@@ -23,8 +23,6 @@ class ListAPIView(APIView):  ## auther_id 도 나와야함
 
     def post(self, request):
         if request.user.is_authenticated:
-            # print(request.data)
-            # print(request.user.id)
             serializer = PostListSerializer(data=request.data)
 
             if serializer.is_valid():
@@ -39,9 +37,7 @@ class UserPostAPIView(APIView):
     def get(self, request):
         if request.user.is_authenticated:
             user_id = request.user.id
-            # print(user_id)
             posts = GatheringPost.objects.filter(author_id=user_id)
-            # print(posts)
             serializer = PostListSerializer(posts, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -80,7 +76,6 @@ class PostAPIView(APIView):
     def put(self, request, pk, format=None):
         if request.user.is_authenticated:
             post = self.get_object(pk)
-            # print(request.user.id)
             if post.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
                 serializer = PostDetailSerializer(post, data=request.data)
                 if serializer.is_valid():
@@ -126,7 +121,6 @@ class CommentAPIView(APIView):
     def put(self, request, pk, comment_pk, format=None):
         if request.user.is_authenticated:
             comment = self.get_object(comment_pk)
-            # print(request.user.id)
             if comment.author_id.id == request.user.id:  # 작성자가 같을때만 수정 가능
                 serializer = CommentSerializer(comment, data=request.data)
                 if serializer.is_valid():
@@ -201,8 +195,6 @@ class LikeDeleteView(APIView):
     def delete(self, request):
         if request.user.is_authenticated:
             likes_id = request.data
-            print(likes_id)
-            # print(likes_id)
             for id in likes_id:
                 like = GatheringLike.objects.get(post=id)
                 like.delete()
@@ -241,7 +233,6 @@ class CommentListAPIView(APIView):  ## auther_id 도 나와야함
     def post(self, request, pk):
         if request.user.is_authenticated:
             serializer = CommentSerializer(data=request.data)
-            # print(request.data)
             if serializer.is_valid():
                 serializer.save(author_id_id=request.user.id, post_id_id=pk)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)

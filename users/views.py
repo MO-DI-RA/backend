@@ -97,19 +97,6 @@ class UserDetailAPIView(APIView):  #
                 {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
             )
 
-    # def put(self, request):  # 프로필 사진 업데이트 닉네임, 유저 프로필 사진만 받아서 put
-    #     if request.user.is_authenticated:
-    #         print(request.data)
-    #         serializer = UserUpdateSerializers(request.user, data=request.data)
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response(serializer.data, status=status.HTTP_200_OK)
-    #         else:
-    #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #     else:
-    #         return Response(
-    #             {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
-    #         )
     def put(self, request):
         if request.user.is_authenticated:
             # print("여기 데이터 ", request.data)
@@ -137,24 +124,6 @@ class UserDetailAPIView(APIView):  #
                 {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
             )
 
-
-# def kakao_test(request):
-#     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
-#     return redirect(
-#         f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
-#     )
-#
-#
-# def kakao_callback(request):
-#     client_id = SOCIAL_AUTH_KAKAO_CLIENT_ID
-#     code = request.GET.get("code")
-#     print(code)
-#     token_request = requests.get(
-#         f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={KAKAO_CALLBACK_URI}&code={code}",
-#     )
-#     return JsonResponse(token_request.json())
-
-# .env 파일로 숨겨야함
 
 SOCIAL_AUTH_KAKAO_CLIENT_ID = "e1e4af98ca9f6131da2d779f616737bc"
 SOCIAL_AUTH_KAKAO_SECRET = "977163"
@@ -186,7 +155,7 @@ def kakao_login(request):
     kakao_account = profile_json.get("kakao_account")
     email = kakao_account.get("email", None)
 
-    print(email)
+    # print(email)
 
     try:
         user = User.objects.get(email=email)
@@ -210,8 +179,8 @@ def kakao_login(request):
             return JsonResponse({"err_msg": "failed to signin"}, status=accept_status)
 
         accept_json = accept.json()
-        print(accept_json)
-        print("Login 성공")
+        # print(accept_json)
+        # print("Login 성공")
         accept_json.pop("user", None)
         return JsonResponse(accept_json)
 
@@ -221,7 +190,7 @@ def kakao_login(request):
         accept = requests.post(
             "http://localhost:8000/user/kakao/login/finish/", data=data
         )
-        print(accept)
+        # print(accept)
         accept_status = accept.status_code
 
         # 뭔가 중간에 문제가 생기면 에러
@@ -230,8 +199,8 @@ def kakao_login(request):
 
         accept_json = accept.json()
         accept_json.pop("user", None)
-        print(accept_json)
-        print("Kakao 회원가입 성공")
+        # print(accept_json)
+        # print("Kakao 회원가입 성공")
         return JsonResponse(accept_json)
 
     except SocialAccount.DoesNotExist:
