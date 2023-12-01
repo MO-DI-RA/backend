@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     "django_filters",
 ]
 
-SITE_ID = 2
+SITE_ID = 3
 
 AUTH_USER_MODEL = "users.User"
 

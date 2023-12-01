@@ -58,17 +58,21 @@ class PostAPIView(APIView):
 
     # CRUD 중 R
     def get(self, request, pk, format=None):
-        request_user = request.GET["user_id"]
-        post = self.get_object(pk)
-        serializer = PostDetailSerializer(post)
-        data = serializer.data
-        if request_user:  # user 가 있으면
-            like = GatheringLike.objects.filter(post=pk, user=request_user)
-            if like:
-                data["like_status"] = True
-            else:
-                data["like_status"] = False
-        else:  # 로그인이 아니면
+        try:  # LOGIN
+            request_user = request.GET["user_id"]
+            post = self.get_object(pk)
+            serializer = PostDetailSerializer(post)
+            data = serializer.data
+            if request_user:  # user 가 있으면
+                like = GatheringLike.objects.filter(post=pk, user=request_user)
+                if like:
+                    data["like_status"] = True
+                else:
+                    data["like_status"] = False
+        except:  # LOGOUT
+            post = self.get_object(pk)
+            serializer = PostDetailSerializer(post)
+            data = serializer.data
             data["like_status"] = False
         return Response(data=data, status=status.HTTP_200_OK)
 
