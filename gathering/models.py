@@ -7,10 +7,7 @@ class GatheringPost(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    tag = models.CharField(max_length=10)
-    method = models.CharField(max_length=10)
-    max_people = models.IntegerField()
-    period = models.CharField(max_length=20)
+
     title = models.CharField(
         verbose_name="title",
         max_length=64,
@@ -19,9 +16,15 @@ class GatheringPost(models.Model):
         verbose_name="content",
         max_length=2000,
     )
+    contact = models.CharField(max_length=20)  # 연락 방법
+    division = models.CharField(max_length=20)  # 모집 구분
+    tag = models.CharField(max_length=10)
+    method = models.CharField(max_length=10)
+    max_people = models.IntegerField()
+    period = models.IntegerField()
     summary = models.CharField(verbose_name="summary", max_length=50)
     status = models.BooleanField(verbose_name="status", default=False)
-    deadline = models.DateTimeField(verbose_name="deadline", null=True)
+    deadline = models.DateTimeField(verbose_name="deadline", null=False)
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)
 

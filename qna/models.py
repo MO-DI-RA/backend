@@ -15,6 +15,7 @@ class QnAPost(models.Model):
         verbose_name="content",
         max_length=2000,
     )
+    summary = models.CharField(max_length=100, null=False)
     status = models.BooleanField(verbose_name="status", default=False)
     created_at = models.DateTimeField(verbose_name="created at", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="updated at", auto_now=True)

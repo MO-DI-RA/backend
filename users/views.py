@@ -13,6 +13,9 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 
 from .serializers import *
 
+import base64
+from django.core.files.base import ContentFile
+
 import requests
 
 
@@ -94,14 +97,41 @@ class UserDetailAPIView(APIView):  #
                 {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
             )
 
-    def put(self, request):  # 프로필 사진 업데이트 닉네임, 유저 프로필 사진만 받아서 put
+    # def put(self, request):  # 프로필 사진 업데이트 닉네임, 유저 프로필 사진만 받아서 put
+    #     if request.user.is_authenticated:
+    #         print(request.data)
+    #         serializer = UserUpdateSerializers(request.user, data=request.data)
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             return Response(serializer.data, status=status.HTTP_200_OK)
+    #         else:
+    #             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #     else:
+    #         return Response(
+    #             {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
+    #         )
+    def put(self, request):
         if request.user.is_authenticated:
-            serializer = UserUpdateSerializers(request.user, data=request.data)
+            # print("여기 데이터 ", request.data)
+            # 이미지 데이터 처리
+            # request는 mutable 해야함
+            mutable_data = request.data.copy()
+            image_data = mutable_data.get("profile_image")
+            if image_data:
+                format, imgstr = image_data.split(";base64,")
+                ext = format.split("/")[-1]
+
+                data = ContentFile(base64.b64decode(imgstr), name="temp." + ext)
+                mutable_data[
+                    "profile_image"
+                ] = data  # 'profile_image'는 모델의 ImageField 필드 이름
+
+            serializer = UserUpdateSerializers(request.user, data=mutable_data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
                 {"message": "로그인이 필요합니다."}, status=status.HTTP_401_UNAUTHORIZED
